@@ -92,8 +92,8 @@ main > :last-child { padding-bottom: clamp(6rem, 12vw, 10rem); }
 .header__logo img { height: 48px; width: auto; }
 .header__nav { display: flex; align-items: center; gap: 2rem; font-size: 0.9375rem; }
 .header__nav a:not(.btn) { text-decoration: none; color: var(--muted); transition: color 0.2s; }
-.header__nav a:not(.btn):hover, .header__nav a[aria-current="page"] { color: var(--ink); }
-.header__nav a[aria-current="page"] { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 6px; text-decoration-thickness: 1.5px; }
+.header__nav a:not(.btn):hover, .header__nav a:not(.btn)[aria-current="page"] { color: var(--ink); }
+.header__nav a:not(.btn)[aria-current="page"] { text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 6px; text-decoration-thickness: 1.5px; }
 .nav-toggle { display: none; }
 
 /* Home hero */
@@ -213,14 +213,15 @@ main > :last-child { padding-bottom: clamp(6rem, 12vw, 10rem); }
 .reviews__link:hover span { color: var(--ink); }
 
 /* Contact page */
-.contact-page { display: grid; grid-template-columns: 7fr 4fr; gap: clamp(2rem, 6vw, 6rem); align-items: start; padding-bottom: clamp(4rem, 8vw, 6rem); }
-.contact-page__info { position: sticky; top: calc(var(--header-h) + 2rem); }
+.contact-page { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(2rem, 6vw, 6rem); align-items: start; padding-bottom: clamp(4rem, 8vw, 6rem); }
+.booking { grid-template-columns: 7fr 4fr; }
+.booking .contact-page__info { position: sticky; top: calc(var(--header-h) + 2rem); }
 .contact-page .phone { margin-top: 0; }
 
 /* Appointment form. Inputs use a smaller 10px radius. */
 .form { background: var(--surface); border-radius: var(--r); padding: clamp(1.5rem, 4vw, 3rem); }
 .form h2 { font-size: clamp(1.7rem, 2.8vw, 2.4rem); }
-.form__intro { color: var(--muted); margin-top: 0.75rem; max-width: 52ch; }
+.form__intro { color: var(--muted); max-width: 52ch; }
 .form__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 2rem; }
 .field { display: grid; gap: 0.5rem; align-content: start; }
 .field--full { grid-column: 1 / -1; }
@@ -325,7 +326,7 @@ main > :last-child { padding-bottom: clamp(6rem, 12vw, 10rem); }
   .reviews__more { grid-template-columns: 1fr; }
   .reviews__link { justify-items: start; text-align: left; }
   .map, .map iframe { min-height: 340px; }
-  .contact-page__info { position: static; }
+  .booking, .booking .contact-page__info { grid-template-columns: 1fr; position: static; }
 }
 @media (max-width: 560px) {
   .header__logo img { height: 40px; }
