@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
+import { DatePicker, Select } from './FormPickers';
 import { services, site } from '@/lib/site';
 
 type State = 'idle' | 'sending' | 'ok' | 'error';
@@ -12,19 +13,6 @@ const label = 'mb-2 block text-[0.95rem] font-medium';
 /** Appointment request. Sent through FormSubmit (AJAX), plain POST when JS is off. */
 export function AppointmentForm() {
   const [state, setState] = useState<State>('idle');
-  const date = useRef<HTMLInputElement>(null);
-
-  // Set on the client so the server-rendered HTML never carries a stale "today".
-  useEffect(() => {
-    if (date.current) date.current.min = new Date().toLocaleDateString('en-CA');
-  }, []);
-
-  function checkWeekend(input: HTMLInputElement) {
-    const day = new Date(`${input.value}T12:00`).getDay();
-    input.setCustomValidity(
-      day === 0 || day === 6 ? 'Vikendom ne radimo. Izaberite dan od ponedjeljka do petka.' : '',
-    );
-  }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -79,41 +67,20 @@ export function AppointmentForm() {
         </div>
         <div>
           <label htmlFor="nacin" className={label}>Kako da vas kontaktiramo?</label>
-          <select id="nacin" name="Način kontakta" className={field}>
-            <option>Pozivom</option>
-            <option>Porukom</option>
-            <option>Emailom</option>
-          </select>
+          <Select id="nacin" name="Način kontakta" options={['Pozivom', 'Porukom', 'Emailom']} />
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="usluga" className={label}>Usluga</label>
-          <select id="usluga" name="Usluga" className={field}>
-            <option>Pregled / nisam siguran</option>
-            {services.map((s) => (
-              <option key={s.id}>{s.title}</option>
-            ))}
-          </select>
+          <Select id="usluga" name="Usluga" options={['Pregled / nisam siguran', ...services.map((s) => s.title)]} />
         </div>
         <div>
           <label htmlFor="datum" className={label}>Željeni datum (opcionalno)</label>
-          <input
-            ref={date}
-            id="datum"
-            name="Željeni datum"
-            type="date"
-            aria-describedby="datum-pomoc"
-            onChange={(e) => checkWeekend(e.currentTarget)}
-            className={field}
-          />
+          <DatePicker id="datum" name="Željeni datum" describedBy="datum-pomoc" />
           <p id="datum-pomoc" className="mt-2 text-sm text-muted">Radimo od ponedjeljka do petka.</p>
         </div>
         <div>
           <label htmlFor="dio-dana" className={label}>Dio dana</label>
-          <select id="dio-dana" name="Dio dana" className={field}>
-            <option>Bilo kada</option>
-            <option>Prijepodne (09 - 13 h)</option>
-            <option>Poslijepodne (13 - 17 h)</option>
-          </select>
+          <Select id="dio-dana" name="Dio dana" options={['Bilo kada', 'Prijepodne (09 - 13 h)', 'Poslijepodne (13 - 17 h)']} />
         </div>
         <div className="sm:col-span-2">
           <label htmlFor="poruka" className={label}>Poruka (opcionalno)</label>
