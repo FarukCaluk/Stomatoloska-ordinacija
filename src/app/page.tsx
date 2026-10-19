@@ -26,14 +26,15 @@ const facts = [
 export default function Home() {
   return (
     <main id="sadrzaj">
-      <section className="relative isolate min-h-[100svh] overflow-clip" aria-labelledby="hero-title">
+      <section className="relative isolate overflow-clip lg:min-h-[100svh]" aria-labelledby="hero-title">
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[radial-gradient(55%_50%_at_66%_40%,rgb(201_163_92/0.18),transparent_70%)]"
         />
-        <HeroTooth className="absolute inset-x-0 top-[9svh] h-[38svh] lg:inset-y-0 lg:left-[28%] lg:right-[-6%] lg:top-0 lg:h-auto" />
+        <HeroTooth className="absolute inset-x-0 top-20 h-[22rem] lg:inset-y-0 lg:left-[28%] lg:right-[-6%] lg:top-0 lg:h-auto" />
 
-        <div className="shell relative flex min-h-[100svh] flex-col justify-end pb-10 pt-32 lg:pb-14">
+        {/* Phones: fixed sizes, not viewport units, so the title never jumps when the browser bar hides */}
+        <div className="shell relative flex flex-col pb-10 pt-[19rem] lg:min-h-[100svh] lg:justify-end lg:pb-14 lg:pt-32">
           <p className="eyebrow hero-fade max-sm:hidden">Stomatološka ordinacija, Kakanj</p>
           <h1
             id="hero-title"
