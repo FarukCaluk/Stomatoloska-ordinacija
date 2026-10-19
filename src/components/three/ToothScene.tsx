@@ -23,7 +23,7 @@ import {
 import { buildSmileGeometry } from './smile';
 
 const SMILE_ARC = Math.PI * 0.62;
-const SPIN_START = 0.6;
+const SPIN_START = -0.35;
 const GOLD = '#c9a35c';
 
 type Panel = { color: string; intensity: number; at: [number, number, number]; size: [number, number]; ring?: number };
@@ -101,8 +101,8 @@ export default function ToothScene({ className, onReady }: { className?: string;
       buildSmileGeometry(SMILE_ARC),
       new MeshStandardMaterial({ color: GOLD, metalness: 1, roughness: 0.2, envMapIntensity: 1.6 }),
     );
-    smile.position.set(0.04, -0.34, 0.14);
-    smile.rotation.set(1.15, 0, -Math.PI / 2 - SMILE_ARC / 2);
+    smile.position.set(0.04, -0.3, 0.62);
+    smile.rotation.set(0.55, 0, -Math.PI / 2 - SMILE_ARC / 2);
     smile.scale.setScalar(0.92);
     group.add(tooth, smile);
 

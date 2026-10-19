@@ -31,13 +31,13 @@ export default function Home() {
           aria-hidden
           className="absolute inset-0 -z-10 bg-[radial-gradient(55%_50%_at_66%_40%,rgb(201_163_92/0.18),transparent_70%)]"
         />
-        <HeroTooth className="absolute inset-x-0 top-[7svh] h-[56svh] lg:inset-y-0 lg:left-[28%] lg:right-[-6%] lg:top-0 lg:h-auto" />
+        <HeroTooth className="absolute inset-x-0 top-[9svh] h-[38svh] lg:inset-y-0 lg:left-[28%] lg:right-[-6%] lg:top-0 lg:h-auto" />
 
         <div className="shell relative flex min-h-[100svh] flex-col justify-end pb-10 pt-32 lg:pb-14">
           <p className="eyebrow hero-fade max-sm:hidden">Stomatološka ordinacija, Kakanj</p>
           <h1
             id="hero-title"
-            className="type-display lines-hero mt-6 text-[clamp(3.3rem,10.6vw,12rem)] mix-blend-difference"
+            className="type-display lines-hero mt-6 text-[clamp(3.3rem,10.6vw,12rem)] lg:mix-blend-difference"
           >
             <Lines lines={['Osmijeh', 'koji traje.']} />
           </h1>
