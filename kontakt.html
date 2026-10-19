@@ -32,7 +32,7 @@
         <a href="rezultati.html">Rezultati</a>
         <a href="o-nama.html">O nama</a>
         <a href="kontakt.html" aria-current="page">Kontakt</a>
-        <a class="btn btn--primary btn--sm" href="tel:+38761608483">Zakažite termin</a>
+        <a class="btn btn--primary btn--sm" href="kontakt.html#zakazivanje">Zakažite termin</a>
       </nav>
     </div>
   </header>
@@ -40,11 +40,80 @@
   <main id="sadrzaj">
     <div class="page-head wrap">
       <h1>Kontakt</h1>
-      <p>Prvi pregled je besplatan. Nazovite nas i dogovorite termin koji vam odgovara.</p>
+      <p>Prvi pregled je besplatan. Pošaljite zahtjev za termin ili nas nazovite, javićemo vam se u toku radnog vremena.</p>
     </div>
 
-    <section class="contact-page wrap" aria-label="Podaci za kontakt">
-      <div>
+    <section class="contact-page wrap" id="zakazivanje" aria-label="Zahtjev za termin i podaci za kontakt">
+      <form class="form" id="termin-forma" action="https://formsubmit.co/farukcaluk12@gmail.com" method="POST">
+        <h2>Zahtjev za termin</h2>
+        <p class="form__intro">Ostavite podatke i željeni termin. Ako vam je hitno, najbrže je da nas pozovete.</p>
+
+        <input type="hidden" name="_subject" value="Novi zahtjev za termin, Dr. Karić">
+        <input type="hidden" name="_template" value="table">
+        <input type="text" name="_honey" class="form__hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <div class="form__grid">
+          <div class="field">
+            <label for="ime">Ime i prezime *</label>
+            <input id="ime" name="Ime i prezime" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="telefon">Telefon *</label>
+            <input id="telefon" name="Telefon" type="tel" autocomplete="tel" inputmode="tel" pattern="[0-9+ /()-]{6,}" required>
+          </div>
+          <div class="field">
+            <label for="email">Email (opcionalno)</label>
+            <input id="email" name="Email" type="email" autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="kontakt-nacin">Kako da vas kontaktiramo?</label>
+            <select id="kontakt-nacin" name="Način kontakta">
+              <option>Pozivom</option>
+              <option>Porukom</option>
+              <option>Emailom</option>
+            </select>
+          </div>
+          <div class="field field--full">
+            <label for="usluga">Usluga</label>
+            <select id="usluga" name="Usluga">
+              <option>Pregled / nisam siguran</option>
+              <option>Pregledi i preventiva</option>
+              <option>Estetska stomatologija</option>
+              <option>Krunice i mostovi</option>
+              <option>Liječenje zuba i kanala</option>
+              <option>Izbjeljivanje zuba</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="datum">Željeni datum (opcionalno)</label>
+            <input id="datum" name="Željeni datum" type="date" aria-describedby="datum-pomoc">
+            <small id="datum-pomoc">Radimo od ponedjeljka do petka.</small>
+          </div>
+          <div class="field">
+            <label for="dio-dana">Dio dana</label>
+            <select id="dio-dana" name="Dio dana">
+              <option>Bilo kada</option>
+              <option>Prijepodne (09 - 13 h)</option>
+              <option>Poslijepodne (13 - 17 h)</option>
+            </select>
+          </div>
+          <div class="field field--full">
+            <label for="poruka">Poruka (opcionalno)</label>
+            <textarea id="poruka" name="Poruka" rows="4"></textarea>
+          </div>
+        </div>
+
+        <label class="form__consent">
+          <input type="checkbox" name="Saglasnost" value="Da" required>
+          <span>Saglasan/na sam da ordinacija Dr. Karić koristi moje podatke isključivo da me kontaktira u vezi s ovim zahtjevom.</span>
+        </label>
+
+        <button class="btn btn--primary" type="submit">Pošaljite zahtjev</button>
+        <p class="form__status" role="status" aria-live="polite"></p>
+        <p class="form__note">Ovo je zahtjev za termin. Termin je potvrđen tek kada vas kontaktiramo s potvrdom.</p>
+      </form>
+
+      <div class="contact-page__info">
         <a class="phone" href="tel:+38761608483">061 608 483</a>
         <dl class="details">
           <div>
@@ -63,6 +132,9 @@
           </div>
         </dl>
       </div>
+    </section>
+
+    <section class="wrap" aria-label="Karta">
       <div class="map">
         <iframe title="Lokacija ordinacije na karti" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
                 src="https://maps.google.com/maps?q=Branilaca%203%2C%2072240%20Kakanj&amp;z=16&amp;output=embed"></iframe>

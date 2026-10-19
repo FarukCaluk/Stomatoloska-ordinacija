@@ -43,6 +43,43 @@ document.addEventListener('DOMContentLoaded', () => {
   }), { threshold: 0.15 });
   document.querySelectorAll('[data-reveal]').forEach(n => io.observe(n));
 
+  // Forma za zahtjev termina: šalje se preko FormSubmit-a na email iz action atributa
+  const form = document.getElementById('termin-forma');
+  if (form) {
+    const date = form.elements['Željeni datum'];
+    date.min = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD, lokalno
+    date.addEventListener('input', () => {
+      const d = new Date(date.value + 'T12:00').getDay();
+      date.setCustomValidity(d === 0 || d === 6 ? 'Vikendom ne radimo. Izaberite dan od ponedjeljka do petka.' : '');
+    });
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const status = form.querySelector('.form__status');
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Šaljem...';
+      try {
+        const res = await fetch(form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        const data = await res.json();
+        if (!res.ok || String(data.success) !== 'true') throw new Error(data.message);
+        form.reset();
+        status.dataset.state = 'ok';
+        status.textContent = 'Hvala! Zahtjev je poslan. Javićemo vam se što prije da potvrdimo termin.';
+      } catch {
+        status.dataset.state = 'error';
+        status.textContent = 'Slanje nije uspjelo. Pokušajte ponovo ili nas nazovite na 061 608 483.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Pošaljite zahtjev';
+      }
+    });
+  }
+
   // Strelice za galeriju
   const track = document.getElementById('galerija');
   document.querySelectorAll('[data-scroll]').forEach(b => b.addEventListener('click', () => {
