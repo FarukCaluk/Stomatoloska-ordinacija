@@ -11,7 +11,8 @@ import './globals.css';
 const archivo = localFont({
   src: '../assets/fonts/archivo-subset.woff2',
   variable: '--font-archivo',
-  display: 'swap',
+  // block: no fallback-font flash that reflows the giant headlines on phones
+  display: 'block',
   weight: '400 800',
   declarations: [{ prop: 'font-stretch', value: '100% 125%' }],
 });

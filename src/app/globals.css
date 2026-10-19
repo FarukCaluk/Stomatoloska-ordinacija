@@ -157,8 +157,9 @@
   .curtain ~ main .hero-fade { animation-delay: calc(0.85s + var(--d, 0s)); }
 }
 
-@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
-  .tooth-float { animation: float 7s ease-in-out infinite; }
+/* Phones: the hero title only fades in, no sliding lines */
+@media (max-width: 1023px) {
+  .lines-hero .line > span { animation-name: fade !important; }
 }
 
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
@@ -182,4 +183,4 @@
 @keyframes curtain { to { translate: 0 -101%; } }
 @keyframes line-up { from { translate: 0 110%; } }
 @keyframes fade-up { from { opacity: 0; translate: 0 1.5rem; } }
-@keyframes float { 50% { translate: 0 -0.6rem; } }
+@keyframes fade { from { opacity: 0; } }

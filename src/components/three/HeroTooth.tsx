@@ -19,9 +19,9 @@ class WebGLBoundary extends Component<{ children: ReactNode }, { failed: boolean
   }
 }
 
-// The live 3D only runs where it pays off: big screens with a mouse, motion allowed.
+// The live 3D (follows the mouse) runs on laptops and desktops.
 // Phones keep the pre-rendered poster of the very same frame, so they stay fast and smooth.
-const LIVE = '(min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference)';
+const LIVE = '(min-width: 1024px) and (any-pointer: fine)';
 
 export function HeroTooth({ className }: { className?: string }) {
   const root = useRef<HTMLDivElement>(null);
@@ -42,10 +42,10 @@ export function HeroTooth({ className }: { className?: string }) {
     return () => events.forEach((e) => window.removeEventListener(e, go));
   }, []);
 
-  // The poster drifts up as the page scrolls, like the live tooth does.
+  // On large screens the poster drifts up with the scroll like the live tooth; on phones it stays put.
   useGSAP(
     () => {
-      gsap.matchMedia().add(NO_REDUCE, () => {
+      gsap.matchMedia().add(`(min-width: 1024px) and ${NO_REDUCE}`, () => {
         gsap.to('.tooth-poster', {
           yPercent: -20,
           scale: 0.92,
@@ -60,7 +60,7 @@ export function HeroTooth({ className }: { className?: string }) {
   return (
     <div ref={root} aria-hidden className={className}>
       <div className="tooth-poster absolute inset-0 transition-opacity duration-700" style={{ opacity: live ? 0 : 1 }}>
-        <Image src={poster} alt="" fill loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 60vw, 100vw" className="tooth-float object-contain" />
+        <Image src={poster} alt="" fill loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 60vw, 100vw" className="object-contain" />
       </div>
       {load && (
         <div className="absolute inset-0 transition-opacity duration-700" style={{ opacity: live ? 1 : 0 }}>
