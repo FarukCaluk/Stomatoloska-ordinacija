@@ -24,7 +24,13 @@ export function SmoothScroll() {
   useLenis(ScrollTrigger.update);
 
   // New page: jump to the top (or to the #anchor), then let ScrollTrigger re-measure.
+  // Skipped on first load: the browser starts at the top and ScrollTrigger measures on load itself.
+  const firstLoad = useRef(true);
   useEffect(() => {
+    if (firstLoad.current) {
+      firstLoad.current = false;
+      return;
+    }
     const lenis = ref.current?.lenis;
     const hash = window.location.hash;
     if (hash && document.querySelector(hash)) lenis?.scrollTo(hash, { immediate: true, offset: -96 });

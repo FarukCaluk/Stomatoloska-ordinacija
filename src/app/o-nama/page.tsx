@@ -14,6 +14,7 @@ import { Parallax } from '@/components/Parallax';
 import { Reveal } from '@/components/Reveal';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/o-nama' },
   title: 'O nama',
   description: 'Upoznajte Dr. Edinu Karić, sestru Aldijanu i prostor stomatološke ordinacije u Kaknju.',
 };

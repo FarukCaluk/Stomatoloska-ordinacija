@@ -1,113 +1,193 @@
 'use client';
 
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Environment, Lightformer } from '@react-three/drei';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { MathUtils, NeutralToneMapping, type Group } from 'three';
-import { buildSmileGeometry, buildToothGeometry } from './tooth-geometry';
+import { useEffect, useRef } from 'react';
+import {
+  BufferAttribute,
+  BufferGeometry,
+  Color,
+  DoubleSide,
+  Group,
+  MathUtils,
+  Mesh,
+  MeshBasicMaterial,
+  MeshPhysicalMaterial,
+  MeshStandardMaterial,
+  NeutralToneMapping,
+  PerspectiveCamera,
+  PlaneGeometry,
+  PMREMGenerator,
+  RingGeometry,
+  Scene,
+  WebGLRenderer,
+} from 'three';
+import { buildSmileGeometry } from './smile';
 
 const SMILE_ARC = Math.PI * 0.62;
-const pointer = { x: 0, y: 0 };
+const SPIN_START = 0.6;
+const GOLD = '#c9a35c';
 
-function Tooth({ still, onReady }: { still: boolean; onReady: () => void }) {
-  const group = useRef<Group>(null);
-  const spin = useRef(0.6);
-  // ponytail: built on the main thread (~150 ms desktop); move to a worker if it ever janks
-  const tooth = useMemo(() => buildToothGeometry(window.innerWidth < 768 ? 64 : 88), []);
-  const smile = useMemo(() => buildSmileGeometry(SMILE_ARC), []);
+type Panel = { color: string; intensity: number; at: [number, number, number]; size: [number, number]; ring?: number };
 
-  useEffect(() => onReady(), [onReady]);
-  useEffect(
-    () => () => {
-      tooth.dispose();
-      smile.dispose();
-    },
-    [tooth, smile],
-  );
+// White soft boxes plus a gold rim light, baked once into an environment map.
+const PANELS: Panel[] = [
+  { color: '#ffffff', intensity: 2.6, at: [0, 5, 2], size: [10, 3] },
+  { color: '#ffffff', intensity: 1.4, at: [-6, 1, 3], size: [3, 8] },
+  { color: GOLD, intensity: 7, at: [6, -1, -2], size: [3, 10] },
+  { color: '#ffffff', intensity: 1.2, at: [0, 0, 9], size: [4, 4], ring: 0 },
+  { color: GOLD, intensity: 3, at: [-3, -5, -4], size: [6, 6], ring: 0.5 },
+];
 
-  useFrame((_, delta) => {
-    const g = group.current;
-    if (!g) return;
-    const scroll = Math.min(window.scrollY / window.innerHeight, 1.2);
-    if (!still) spin.current += delta * 0.32;
-    g.rotation.y = MathUtils.damp(g.rotation.y, spin.current + pointer.x * 0.5 + scroll * 1.6, 3.5, delta);
-    g.rotation.x = MathUtils.damp(g.rotation.x, -pointer.y * 0.22 + scroll * 0.45, 3.5, delta);
-    g.position.y = MathUtils.damp(g.position.y, -0.08 + scroll * 1.1, 5, delta);
+function studioEnvironment(renderer: WebGLRenderer) {
+  const scene = new Scene();
+  for (const p of PANELS) {
+    const panel = new Mesh(
+      p.ring === undefined ? new PlaneGeometry(1, 1) : new RingGeometry(p.ring, 1, 48),
+      new MeshBasicMaterial({ color: new Color(p.color).multiplyScalar(p.intensity), side: DoubleSide }),
+    );
+    panel.position.set(...p.at);
+    panel.scale.set(p.size[0], p.size[1], 1);
+    panel.lookAt(0, 0, 0);
+    scene.add(panel);
+  }
+  const pmrem = new PMREMGenerator(renderer);
+  const target = pmrem.fromScene(scene, 0.02);
+  pmrem.dispose();
+  scene.traverse((o) => {
+    if (o instanceof Mesh) {
+      o.geometry.dispose();
+      (o.material as MeshBasicMaterial).dispose();
+    }
   });
-
-  return (
-    <group ref={group}>
-      <mesh geometry={tooth} scale={1.22} rotation-z={-0.1}>
-        <meshPhysicalMaterial
-          color="#f3eee4"
-          roughness={0.24}
-          clearcoat={1}
-          clearcoatRoughness={0.05}
-          sheen={0.6}
-          sheenRoughness={0.45}
-          sheenColor="#fff0d2"
-          envMapIntensity={1.15}
-        />
-      </mesh>
-      <mesh
-        geometry={smile}
-        position={[0.04, -0.34, 0.14]}
-        rotation={[1.15, 0, -Math.PI / 2 - SMILE_ARC / 2]}
-        scale={0.92}
-      >
-        <meshStandardMaterial color="#c9a35c" metalness={1} roughness={0.2} envMapIntensity={1.6} />
-      </mesh>
-    </group>
-  );
+  return target;
 }
 
-export default function ToothScene({ className }: { className?: string }) {
-  const wrap = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(true);
-  const [ready, setReady] = useState(false);
-  const [still] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  const onReady = useCallback(() => setReady(true), []);
+/** Live porcelain tooth. Desktop only; phones get the pre-rendered poster of the same frame. */
+export default function ToothScene({ className, onReady }: { className?: string; onReady: () => void }) {
+  const host = useRef<HTMLDivElement>(null);
+  const ready = useRef(onReady);
 
   useEffect(() => {
+    const el = host.current!;
+    const renderer = new WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    renderer.toneMapping = NeutralToneMapping;
+    renderer.domElement.style.cssText = 'display:block;width:100%;height:100%';
+    el.appendChild(renderer.domElement);
+
+    const scene = new Scene();
+    const camera = new PerspectiveCamera(30, 1, 0.1, 50);
+    camera.position.z = 5.2;
+    const env = studioEnvironment(renderer);
+    scene.environment = env.texture;
+
+    const group = new Group();
+    group.rotation.y = SPIN_START;
+    group.position.y = -0.08;
+    scene.add(group);
+
+    const tooth = new Mesh(
+      new BufferGeometry(),
+      new MeshPhysicalMaterial({
+        color: '#f3eee4',
+        roughness: 0.24,
+        clearcoat: 1,
+        clearcoatRoughness: 0.05,
+        envMapIntensity: 1.15,
+      }),
+    );
+    tooth.scale.setScalar(1.22);
+    tooth.rotation.z = -0.1;
+    const smile = new Mesh(
+      buildSmileGeometry(SMILE_ARC),
+      new MeshStandardMaterial({ color: GOLD, metalness: 1, roughness: 0.2, envMapIntensity: 1.6 }),
+    );
+    smile.position.set(0.04, -0.34, 0.14);
+    smile.rotation.set(1.15, 0, -Math.PI / 2 - SMILE_ARC / 2);
+    smile.scale.setScalar(0.92);
+    group.add(tooth, smile);
+
+    const resize = () => {
+      const { clientWidth: w, clientHeight: h } = el;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    };
+    const ro = new ResizeObserver(resize);
+    ro.observe(el);
+    resize();
+
+    const pointer = { x: 0, y: 0 };
     const onMove = (e: PointerEvent) => {
       pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
       pointer.y = -((e.clientY / window.innerHeight) * 2 - 1);
     };
     window.addEventListener('pointermove', onMove, { passive: true });
-    const io = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
-    if (wrap.current) io.observe(wrap.current);
+
+    let spin = SPIN_START;
+    let last = performance.now();
+    const tick = (now: number) => {
+      const delta = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      const scroll = Math.min(window.scrollY / window.innerHeight, 1.2);
+      spin += delta * 0.32;
+      group.rotation.y = MathUtils.damp(group.rotation.y, spin + pointer.x * 0.5 + scroll * 1.6, 3.5, delta);
+      group.rotation.x = MathUtils.damp(group.rotation.x, -pointer.y * 0.22 + scroll * 0.45, 3.5, delta);
+      group.position.y = MathUtils.damp(group.position.y, -0.08 + scroll * 1.1, 5, delta);
+      renderer.render(scene, camera);
+    };
+
+    // Draw only while the hero is on screen.
+    let started = false;
+    let visible = true;
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (started) renderer.setAnimationLoop(visible ? tick : null);
+    });
+    io.observe(el);
+
+    // Dev helper used to export the poster image: renders the starting pose and returns a PNG.
+    if (process.env.NODE_ENV !== 'production') {
+      (window as unknown as { __toothPoster?: () => string }).__toothPoster = () => {
+        renderer.setAnimationLoop(null);
+        group.rotation.set(0, SPIN_START, 0);
+        group.position.y = -0.08;
+        renderer.render(scene, camera);
+        return renderer.domElement.toDataURL('image/png');
+      };
+    }
+
+    const worker = new Worker(new URL('./tooth.worker.ts', import.meta.url), { type: 'module' });
+    worker.onmessage = async ({ data }: MessageEvent<{ position: Float32Array; normal: Float32Array }>) => {
+      worker.terminate();
+      tooth.geometry.setAttribute('position', new BufferAttribute(data.position, 3));
+      tooth.geometry.setAttribute('normal', new BufferAttribute(data.normal, 3));
+      tooth.geometry.computeBoundingSphere();
+      await renderer.compileAsync(scene, camera); // compiles shaders without freezing the page
+      if (!host.current) return;
+      renderer.render(scene, camera);
+      started = true;
+      last = performance.now();
+      if (visible) renderer.setAnimationLoop(tick);
+      ready.current();
+    };
+    worker.postMessage(84);
+
     return () => {
-      window.removeEventListener('pointermove', onMove);
+      worker.terminate();
       io.disconnect();
+      ro.disconnect();
+      window.removeEventListener('pointermove', onMove);
+      renderer.setAnimationLoop(null);
+      tooth.geometry.dispose();
+      tooth.material.dispose();
+      smile.geometry.dispose();
+      smile.material.dispose();
+      env.dispose();
+      renderer.dispose();
+      renderer.domElement.remove();
     };
   }, []);
 
-  return (
-    <div
-      ref={wrap}
-      aria-hidden
-      className={className}
-      style={{
-        opacity: ready ? 1 : 0,
-        scale: ready ? '1' : '0.94',
-        transition: 'opacity 1.6s cubic-bezier(0.16,1,0.3,1) 0.6s, scale 2s cubic-bezier(0.16,1,0.3,1) 0.6s',
-      }}
-    >
-      <Canvas
-        frameloop={visible && !still ? 'always' : 'demand'}
-        dpr={[1, 1.75]}
-        camera={{ position: [0, 0, 5.2], fov: 30 }}
-        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance', toneMapping: NeutralToneMapping }}
-      >
-        <Environment resolution={256} frames={1}>
-          <Lightformer form="rect" intensity={2.6} position={[0, 5, 2]} scale={[10, 3, 1]} target />
-          <Lightformer form="rect" intensity={1.4} position={[-6, 1, 3]} scale={[3, 8, 1]} target />
-          <Lightformer form="rect" color="#c9a35c" intensity={7} position={[6, -1, -2]} scale={[3, 10, 1]} target />
-          <Lightformer form="circle" intensity={1.2} position={[0, 0, 9]} scale={4} target />
-          <Lightformer form="ring" color="#c9a35c" intensity={3} position={[-3, -5, -4]} scale={6} target />
-        </Environment>
-        <Tooth still={still} onReady={onReady} />
-      </Canvas>
-    </div>
-  );
+  return <div ref={host} className={className} />;
 }

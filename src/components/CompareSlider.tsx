@@ -10,11 +10,14 @@ export function CompareSlider({
   after,
   alt,
   sizes = '(min-width: 1024px) 50vw, 100vw',
+  eager = false,
 }: {
   before: StaticImageData;
   after: StaticImageData;
   alt: string;
   sizes?: string;
+  /** Set for a slider at the top of a page, where it is the largest thing on screen. */
+  eager?: boolean;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
@@ -49,9 +52,9 @@ export function CompareSlider({
       className="relative self-start overflow-hidden rounded-[1.75rem] border border-line select-none"
       style={{ '--pos': '50%' } as CSSProperties}
     >
-      <Image src={after} alt={`Poslije: ${alt}`} sizes={sizes} className="block h-auto w-full" />
+      <Image src={after} alt={`Poslije: ${alt}`} sizes={sizes} loading={eager ? 'eager' : 'lazy'} fetchPriority={eager ? 'high' : 'auto'} className="block h-auto w-full" />
       <div className="absolute inset-0" style={{ clipPath: 'inset(0 calc(100% - var(--pos)) 0 0)' }}>
-        <Image src={before} alt={`Prije: ${alt}`} fill sizes={sizes} className="object-cover" />
+        <Image src={before} alt={`Prije: ${alt}`} fill sizes={sizes} loading={eager ? 'eager' : 'lazy'} className="object-cover" />
       </div>
 
       <div aria-hidden className="pointer-events-none absolute inset-y-0 left-[var(--pos)] w-0.5 -translate-x-1/2 bg-ink">

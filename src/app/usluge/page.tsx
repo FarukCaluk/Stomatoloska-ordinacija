@@ -10,6 +10,7 @@ import { Steps } from '@/components/Steps';
 import { services } from '@/lib/site';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/usluge' },
   title: 'Usluge',
   description:
     'Pregledi i preventiva, estetska stomatologija, krunice i mostovi, liječenje zuba i kanala te izbjeljivanje u ordinaciji Dr. Karić u Kaknju.',

@@ -7,6 +7,7 @@ import { Parallax } from '@/components/Parallax';
 import { site } from '@/lib/site';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/kontakt' },
   title: 'Kontakt',
   description: 'Branilaca 3, 72240 Kakanj. Telefon 061 608 483. Radno vrijeme ponedjeljak do petak od 09:00 do 17:00.',
 };

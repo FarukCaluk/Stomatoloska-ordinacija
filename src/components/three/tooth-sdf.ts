@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferGeometry, MeshBasicMaterial, TorusGeometry, Vector3 } from 'three';
+import { MeshBasicMaterial } from 'three';
 import { MarchingCubes } from 'three/addons/objects/MarchingCubes.js';
 
 // Signed distance helpers (Inigo Quilez). Negative inside, positive outside.
@@ -61,8 +61,8 @@ export function toothSDF(x: number, y: number, z: number) {
   return smin(d, roots, 0.16);
 }
 
-/** Polygonizes the tooth SDF once into a static, smooth-shaded geometry. */
-export function buildToothGeometry(resolution = 84) {
+/** Polygonizes the tooth SDF into flat position/normal arrays (runs in a Web Worker). */
+export function buildToothArrays(resolution = 84) {
   const mc = new MarchingCubes(resolution, new MeshBasicMaterial(), false, false, 160000);
   mc.isolation = 0;
   const { size, size2, halfsize, field } = mc;
@@ -85,29 +85,5 @@ export function buildToothGeometry(resolution = 84) {
     normals[i + 1] /= l;
     normals[i + 2] /= l;
   }
-  const geometry = new BufferGeometry();
-  geometry.setAttribute('position', new BufferAttribute(mc.positionArray.slice(0, n), 3));
-  geometry.setAttribute('normal', new BufferAttribute(normals, 3));
-  geometry.computeBoundingSphere();
-  mc.geometry.dispose();
-  return geometry;
-}
-
-/** The gold "smile" from the logo: a torus arc that tapers to points at both ends. */
-export function buildSmileGeometry(arc = Math.PI * 0.62, radius = 1, tube = 0.06) {
-  const geometry = new TorusGeometry(radius, tube, 24, 220, arc);
-  const pos = geometry.attributes.position;
-  const p = new Vector3();
-  const c = new Vector3();
-  for (let i = 0; i < pos.count; i++) {
-    p.fromBufferAttribute(pos, i);
-    const theta = Math.atan2(p.y, p.x);
-    const u = Math.min(Math.max((theta < -0.01 ? theta + Math.PI * 2 : theta) / arc, 0), 1);
-    const taper = Math.max(Math.pow(Math.sin(Math.PI * u), 0.65), 0.04);
-    c.set(Math.cos(theta) * radius, Math.sin(theta) * radius, 0);
-    p.sub(c).multiplyScalar(taper).add(c);
-    pos.setXYZ(i, p.x, p.y, p.z);
-  }
-  geometry.computeVertexNormals();
-  return geometry;
+  return { position: mc.positionArray.slice(0, n), normal: normals };
 }

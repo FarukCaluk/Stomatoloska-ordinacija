@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import edina from '@/assets/img/dr-edina-karic-1440.webp';
 import poslije from '@/assets/img/rezultat-2-poslije.webp';
@@ -12,6 +13,8 @@ import { ScrubText } from '@/components/ScrubText';
 import { ServiceStack } from '@/components/ServiceStack';
 import { HeroTooth } from '@/components/three/HeroTooth';
 import { reviews, services, site } from '@/lib/site';
+
+export const metadata: Metadata = { alternates: { canonical: '/' } };
 
 const facts = [
   { big: '5,0', small: 'Ocjena na Googleu' },

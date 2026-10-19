@@ -12,7 +12,7 @@ export function ScrubText({ text, className }: { text: string; className?: strin
       gsap.matchMedia().add(NO_REDUCE, () => {
         gsap.fromTo(
           '.w',
-          { opacity: 0.13 },
+          { opacity: 0.4 },
           {
             opacity: 1,
             stagger: 0.1,

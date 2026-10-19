@@ -5,6 +5,7 @@ import { PageHero } from '@/components/PageHero';
 import { site } from '@/lib/site';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/zakazivanje' },
   title: 'Zakažite termin',
   description: 'Pošaljite zahtjev za termin u stomatološkoj ordinaciji Dr. Karić u Kaknju. Prvi pregled je besplatan.',
 };

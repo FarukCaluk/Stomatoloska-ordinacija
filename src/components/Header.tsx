@@ -43,7 +43,7 @@ export function Header() {
 
       <header
         className={`fixed inset-x-0 top-0 z-50 border-b transition-[translate,background-color,border-color] duration-700 ease-expo ${
-          solid && !open ? 'border-line bg-bg/75 backdrop-blur-xl' : 'border-transparent'
+          solid && !open ? 'border-line bg-bg/95 lg:bg-bg/75 lg:backdrop-blur-xl' : 'border-transparent'
         } ${hidden && !open ? '-translate-y-full' : ''}`}
       >
         <div className="shell flex h-20 items-center justify-between gap-6">

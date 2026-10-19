@@ -12,6 +12,7 @@ import { Reveal } from '@/components/Reveal';
 import { site } from '@/lib/site';
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/rezultati' },
   title: 'Rezultati',
   description: 'Prije i poslije: stvarni radovi iz stomatološke ordinacije Dr. Karić u Kaknju.',
 };
@@ -25,7 +26,7 @@ export default function RezultatiPage() {
       />
 
       <section className="shell grid items-start gap-6 lg:grid-cols-2" aria-label="Prije i poslije, klizači">
-        <CompareSlider before={prije2} after={poslije2} alt="požutjeli prednji zubi nakon estetske rekonstrukcije" />
+        <CompareSlider eager before={prije2} after={poslije2} alt="požutjeli prednji zubi nakon estetske rekonstrukcije" />
         <div className="lg:mt-[clamp(4rem,10vw,9rem)]">
           <CompareSlider before={prije3} after={poslije3} alt="neujednačeni prednji zubi nakon izrade novih krunica" />
         </div>

@@ -1,22 +1,26 @@
 import type { Metadata, Viewport } from 'next';
-import { Archivo } from 'next/font/google';
+import localFont from 'next/font/local';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { SmoothScroll } from '@/components/SmoothScroll';
 import { site } from '@/lib/site';
+import { siteUrl } from '@/lib/url';
 import './globals.css';
 
-const archivo = Archivo({
-  subsets: ['latin', 'latin-ext'],
-  axes: ['wdth'],
+// Archivo (OFL), subset to the characters this site uses: 41 KB instead of ~175 KB from Google Fonts.
+const archivo = localFont({
+  src: '../assets/fonts/archivo-subset.woff2',
   variable: '--font-archivo',
   display: 'swap',
+  weight: '400 800',
+  declarations: [{ prop: 'font-stretch', value: '100% 125%' }],
 });
 
 const description =
   'Stomatološka ordinacija Dr. Karić u Kaknju. Pregledi, estetska stomatologija, krunice i liječenje zuba uz individualan pristup. Prvi pregled je besplatan.';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: { default: 'Stomatološka ordinacija Dr. Karić | Kakanj', template: '%s | Dr. Karić, Kakanj' },
   description,
   openGraph: {
@@ -34,6 +38,8 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Dentist',
   name: site.name,
+  url: siteUrl,
+  image: `${siteUrl}/opengraph-image.jpg`,
   telephone: '+387 61 608 483',
   address: {
     '@type': 'PostalAddress',
