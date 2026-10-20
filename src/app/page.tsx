@@ -34,8 +34,8 @@ export default function Home() {
         <HeroTooth className="absolute inset-x-0 top-20 h-[22rem] lg:inset-y-0 lg:left-[28%] lg:right-[-6%] lg:top-0 lg:h-auto" />
 
         {/* Phones: fixed sizes, not viewport units, so the title never jumps when the browser bar hides */}
-        <div className="shell relative flex flex-col pb-10 pt-[19rem] lg:min-h-[100svh] lg:justify-end lg:pb-14 lg:pt-32">
-          <p className="eyebrow hero-fade max-sm:hidden">Stomatološka ordinacija, Kakanj</p>
+        <div className="shell relative flex flex-col pb-10 pt-[15.5rem] lg:min-h-[100svh] lg:justify-end lg:pb-14 lg:pt-32">
+          <p className="eyebrow hero-fade [text-shadow:0_1px_10px_rgb(0_0_0/0.9),0_0_2px_rgb(0_0_0/0.9)]">Stomatološka ordinacija, Kakanj</p>
           <h1
             id="hero-title"
             className="type-display lines-hero mt-6 text-[clamp(3.3rem,10.6vw,12rem)] lg:mix-blend-difference"

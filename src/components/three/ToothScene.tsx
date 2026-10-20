@@ -101,7 +101,7 @@ export default function ToothScene({ className, onReady }: { className?: string;
       buildSmileGeometry(SMILE_ARC),
       new MeshStandardMaterial({ color: GOLD, metalness: 1, roughness: 0.2, envMapIntensity: 1.6 }),
     );
-    smile.position.set(0.04, -0.3, 0.62);
+    smile.position.set(0.04, 0.02, 0.62);
     smile.rotation.set(0.55, 0, -Math.PI / 2 - SMILE_ARC / 2);
     smile.scale.setScalar(0.92);
     group.add(tooth, smile);
