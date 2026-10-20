@@ -13,7 +13,7 @@ export function Footer() {
       <HideOn paths={['/zakazivanje']}>
         <section className="shell pb-20 pt-[clamp(5rem,12vw,10rem)]" aria-labelledby="footer-cta">
           <Reveal>
-            <h2 id="footer-cta" className="type-display text-[clamp(2.1rem,9.6vw,10.5rem)]">
+            <h2 id="footer-cta" className="type-display text-[clamp(2rem,9vw,10.5rem)]">
               <Lines lines={['Prvi pregled', <span key="g" className="text-gold">je besplatan.</span>]} />
             </h2>
           </Reveal>

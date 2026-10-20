@@ -40,7 +40,7 @@ export function ServiceStack({ services }: { services: Service[] }) {
             <div className="flex flex-col justify-between gap-10 p-7 sm:p-10 lg:p-14">
               <span className="font-semibold text-gold">{String(i + 1).padStart(2, '0')}</span>
               <div>
-                <h3 id={`stack-${s.id}`} className="type-display text-[clamp(1.8rem,3.4vw,3.6rem)]">
+                <h3 id={`stack-${s.id}`} className="type-display text-[clamp(1.5rem,3.4vw,3.6rem)]">
                   {s.title}
                 </h3>
                 <p className="mt-6 max-w-[42ch] text-lg text-muted">{s.text}</p>

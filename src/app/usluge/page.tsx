@@ -53,7 +53,7 @@ export default function UslugePage() {
       >
         <div className="lg:sticky lg:top-32 lg:self-start">
           <Reveal>
-            <h2 id="prvi-title" className="type-display text-[clamp(2.6rem,6vw,6.4rem)]">
+            <h2 id="prvi-title" className="type-display text-[clamp(2rem,6vw,6.4rem)]">
               <Lines lines={['Prvi', 'pregled', <span key="g" className="text-gold">je besplatan.</span>]} />
             </h2>
           </Reveal>

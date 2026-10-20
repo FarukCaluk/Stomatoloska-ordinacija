@@ -5,7 +5,7 @@ import { Lines } from './Lines';
 export function PageHero({ title, lead }: { title: ReactNode[]; lead: ReactNode }) {
   return (
     <header className="shell pb-[clamp(3rem,7vw,6rem)] pt-[clamp(8rem,16vw,13rem)]">
-      <h1 className="type-display lines-hero text-[clamp(2.4rem,11.5vw,13rem)]">
+      <h1 className="type-display lines-hero text-[clamp(2.25rem,10vw,13rem)]">
         <Lines lines={title} />
       </h1>
       <div className="mt-10 grid border-t border-line pt-8 lg:grid-cols-12">

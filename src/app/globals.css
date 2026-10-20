@@ -47,11 +47,15 @@
 
 /* Poster type: Archivo at full width, the brand's uppercase voice from its posts */
 @utility type-display {
-  font-stretch: 125%;
+  font-stretch: 112%;
   font-weight: 800;
   text-transform: uppercase;
-  line-height: 0.9;
-  letter-spacing: -0.012em;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  @media (width >= 64rem) {
+    font-stretch: 125%;
+    line-height: 0.9;
+  }
 }
 
 @utility type-outline {

@@ -47,7 +47,7 @@ export default function RezultatiPage() {
         </Reveal>
         <div>
           <Reveal>
-            <h2 id="protetika-title" className="type-display text-[clamp(2.6rem,6vw,6.4rem)]">
+            <h2 id="protetika-title" className="type-display text-[clamp(2rem,6vw,6.4rem)]">
               <Lines lines={['Novi', <span key="g" className="text-gold">osmijeh.</span>]} />
             </h2>
           </Reveal>

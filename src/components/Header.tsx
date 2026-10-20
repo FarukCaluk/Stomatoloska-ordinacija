@@ -85,7 +85,7 @@ export function Header() {
       {/* Outside the header: its backdrop-filter would trap a fixed overlay inside 80px. */}
       <div
         id="meni"
-        className={`fixed inset-0 z-40 flex flex-col bg-bg px-[clamp(1rem,3.5vw,3rem)] pb-8 pt-28 transition-[opacity,visibility] duration-500 lg:hidden ${
+        className={`fixed inset-0 z-40 flex flex-col bg-bg px-[clamp(1rem,3.5vw,3rem)] pb-8 pt-24 transition-[opacity,visibility] duration-500 lg:hidden ${
           open ? 'visible opacity-100' : 'invisible opacity-0'
         }`}
       >
@@ -97,14 +97,20 @@ export function Header() {
               onClick={close}
               aria-current={pathname === item.href ? 'page' : undefined}
               style={{ transitionDelay: open ? `${0.08 + i * 0.05}s` : '0s' } as CSSProperties}
-              className={`type-display border-b border-line py-4 text-[clamp(2.2rem,11vw,4rem)] transition-[translate,opacity] duration-700 ease-expo ${
+              className={`flex items-center justify-between border-b border-line py-4 text-[1.375rem] font-semibold tracking-[-0.01em] transition-[translate,opacity] duration-700 ease-expo ${
                 open ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
               } ${pathname === item.href ? 'text-gold' : ''}`}
             >
               {item.label}
+              <span aria-hidden className="text-base text-gold">→</span>
             </Link>
           ))}
         </nav>
+        <p className="mt-8 text-sm text-muted">
+          {site.address.street}, {site.address.city}
+          <br />
+          Ponedjeljak - petak, 09:00 - 17:00
+        </p>
         <div className="mt-auto grid gap-3">
           <Link href="/zakazivanje" onClick={close} className="btn btn-gold w-full">
             Zakažite termin

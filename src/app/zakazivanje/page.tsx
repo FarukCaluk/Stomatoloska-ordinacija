@@ -23,7 +23,7 @@ export default function ZakazivanjePage() {
         <aside className="grid gap-8 lg:sticky lg:top-28">
           <div>
             <p className="eyebrow mb-3">Hitno?</p>
-            <a href={site.phone.href} className="type-display text-[clamp(2.2rem,3.6vw,3.4rem)] text-gold transition-colors hover:text-ink">
+            <a href={site.phone.href} className="type-display text-[clamp(1.75rem,3.6vw,3.4rem)] text-gold transition-colors hover:text-ink">
               {site.phone.display}
             </a>
           </div>

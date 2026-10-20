@@ -46,7 +46,7 @@ export default function ONamaPage() {
             className="aspect-[4/5] rounded-[1.75rem] border border-line sm:aspect-[10/9]"
           />
           <Reveal>
-            <h2 className="type-display mt-10 text-[clamp(2.4rem,5vw,5.2rem)]">
+            <h2 className="type-display mt-10 text-[clamp(1.75rem,5vw,5.2rem)]">
               <Lines lines={['Dr. Edina Karić']} />
             </h2>
           </Reveal>
@@ -68,7 +68,7 @@ export default function ONamaPage() {
             className="aspect-[4/5] rounded-[1.75rem] border border-line"
           />
           <Reveal>
-            <h2 className="type-display mt-10 text-[clamp(2.4rem,5vw,5.2rem)]">
+            <h2 className="type-display mt-10 text-[clamp(1.75rem,5vw,5.2rem)]">
               <Lines lines={['Aldijana']} />
             </h2>
           </Reveal>
@@ -100,7 +100,7 @@ export default function ONamaPage() {
           intro={
             <>
               <p className="eyebrow">Ordinacija</p>
-              <h2 className="type-display mt-6 text-[clamp(2.4rem,4.4vw,4.6rem)]">
+              <h2 className="type-display mt-6 text-[clamp(1.75rem,4.4vw,4.6rem)]">
                 Prostor <span className="text-gold">za mir.</span>
               </h2>
               <p className="mt-6 max-w-[32ch] text-lg text-muted">

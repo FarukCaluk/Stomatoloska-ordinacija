@@ -32,7 +32,7 @@ export default function KontaktPage() {
         <div>
           <a
             href={site.phone.href}
-            className="type-display block whitespace-nowrap text-[clamp(2.1rem,4.2vw,5rem)] text-gold transition-colors hover:text-ink"
+            className="type-display block whitespace-nowrap text-[clamp(1.875rem,4.2vw,5rem)] text-gold transition-colors hover:text-ink"
           >
             {site.phone.display}
           </a>

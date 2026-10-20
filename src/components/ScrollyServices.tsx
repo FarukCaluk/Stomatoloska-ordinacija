@@ -44,7 +44,7 @@ export function ScrollyServices({ services }: { services: Service[] }) {
             key={s.id}
             id={s.id}
             data-index={i}
-            className="flex min-h-[72svh] flex-col justify-center border-t border-line py-14 first:border-t-0 lg:py-20"
+            className="flex flex-col justify-center border-t border-line py-12 first:border-t-0 lg:min-h-[72svh] lg:py-20"
           >
             <div className="relative mb-8 aspect-[4/3] overflow-hidden rounded-[1.75rem] border border-line lg:hidden">
               <Image src={s.image} alt={s.alt} fill sizes="100vw" className="object-cover" />
@@ -54,7 +54,7 @@ export function ScrollyServices({ services }: { services: Service[] }) {
             >
               {String(i + 1).padStart(2, '0')}
             </span>
-            <h2 className="type-display mt-4 text-[clamp(1.9rem,3.6vw,3.6rem)]">{s.title}</h2>
+            <h2 className="type-display mt-4 text-[clamp(1.6rem,3.6vw,3.6rem)]">{s.title}</h2>
             <p className="mt-6 max-w-[46ch] text-lg text-muted">{s.text}</p>
             <ul className="mt-8 flex flex-wrap gap-2">
               {s.tags.map((t) => (

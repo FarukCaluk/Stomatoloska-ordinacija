@@ -34,7 +34,7 @@ export function Steps({ steps }: { steps: { title: string; text: string }[] }) {
             <span className="type-display absolute -left-16 top-0 grid size-10 place-items-center rounded-full border border-gold bg-bg text-lg text-gold sm:-left-24 sm:size-16 sm:text-2xl">
               {i + 1}
             </span>
-            <h3 className="type-display pt-1 text-[clamp(1.8rem,3.4vw,3rem)] sm:pt-3">{s.title}</h3>
+            <h3 className="type-display pt-1 text-[clamp(1.375rem,3.4vw,3rem)] sm:pt-3">{s.title}</h3>
             <p className="mt-4 max-w-[44ch] text-lg text-muted">{s.text}</p>
           </li>
         ))}

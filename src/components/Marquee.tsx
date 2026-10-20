@@ -42,7 +42,7 @@ export function Marquee({ items }: { items: string[] }) {
   return (
     <div ref={root} className="overflow-clip border-y border-line py-[clamp(1.25rem,3vw,2.5rem)]">
       <p className="sr-only">{items.join(', ')}</p>
-      <div aria-hidden className="marquee-track flex w-max text-[clamp(2.5rem,7.5vw,7.5rem)] leading-none">
+      <div aria-hidden className="marquee-track flex w-max text-[clamp(1.75rem,7.5vw,7.5rem)] leading-none">
         {row(0)}
         {row(1)}
       </div>

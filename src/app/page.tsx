@@ -31,22 +31,22 @@ export default function Home() {
           aria-hidden
           className="absolute inset-0 -z-10 bg-[radial-gradient(55%_50%_at_66%_40%,rgb(201_163_92/0.18),transparent_70%)]"
         />
-        <HeroTooth className="absolute inset-x-0 top-20 h-[22rem] lg:inset-y-0 lg:left-[28%] lg:right-[-6%] lg:top-0 lg:h-auto" />
+        <HeroTooth className="relative mx-auto mt-20 h-72 w-full max-w-sm [mask-image:linear-gradient(to_bottom,#000_72%,transparent)] lg:absolute lg:inset-y-0 lg:left-[28%] lg:right-[-6%] lg:top-0 lg:mt-0 lg:h-auto lg:max-w-none lg:[mask-image:none]" />
 
-        {/* Phones: fixed sizes, not viewport units, so the title never jumps when the browser bar hides */}
-        <div className="shell relative flex flex-col pb-10 pt-[15.5rem] lg:min-h-[100svh] lg:justify-end lg:pb-14 lg:pt-32">
-          <p className="eyebrow hero-fade [text-shadow:0_1px_10px_rgb(0_0_0/0.9),0_0_2px_rgb(0_0_0/0.9)]">Stomatološka ordinacija, Kakanj</p>
+        {/* Phones: plain document flow with fixed sizes, so nothing jumps when the browser bar hides */}
+        <div className="shell relative -mt-4 flex flex-col pb-14 lg:mt-0 lg:min-h-[100svh] lg:justify-end lg:pb-14 lg:pt-32">
+          <p className="eyebrow hero-fade text-center lg:text-left">Stomatološka ordinacija, Kakanj</p>
           <h1
             id="hero-title"
-            className="type-display lines-hero mt-6 text-[clamp(3.3rem,10.6vw,12rem)] lg:mix-blend-difference"
+            className="type-display lines-hero mt-4 text-center text-[clamp(2.5rem,10.6vw,12rem)] lg:mt-6 lg:text-left lg:mix-blend-difference"
           >
             <Lines lines={['Osmijeh', 'koji traje.']} />
           </h1>
-          <div className="mt-10 flex flex-col gap-8 border-t border-line pt-8 lg:flex-row lg:items-end lg:justify-between">
-            <p className="hero-fade max-w-[38ch] text-lg text-muted lg:text-xl" style={{ '--d': '0.1s' } as React.CSSProperties}>
+          <div className="mt-8 flex flex-col gap-7 border-t border-line pt-7 lg:mt-10 lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:pt-8">
+            <p className="hero-fade mx-auto max-w-[38ch] text-center text-base text-muted sm:text-lg lg:mx-0 lg:text-left lg:text-xl" style={{ '--d': '0.1s' } as React.CSSProperties}>
               Pregledi, estetika i protetika uz individualan pristup i savremenu opremu. Prvi pregled je besplatan.
             </p>
-            <div className="hero-fade flex flex-wrap gap-3" style={{ '--d': '0.2s' } as React.CSSProperties}>
+            <div className="hero-fade grid gap-3 sm:flex sm:flex-wrap" style={{ '--d': '0.2s' } as React.CSSProperties}>
               <Link href="/zakazivanje" className="btn btn-gold">
                 Zakažite termin
               </Link>
@@ -75,7 +75,7 @@ export default function Home() {
 
       <section className="shell py-[clamp(6rem,14vw,12rem)]" aria-label="O ordinaciji">
         <ScrubText
-          className="max-w-[24ch] text-[clamp(2rem,4.6vw,4.6rem)] font-medium leading-[1.06] tracking-[-0.03em]"
+          className="max-w-[24ch] text-[clamp(1.5rem,4.6vw,4.6rem)] font-medium leading-[1.06] tracking-[-0.03em]"
           text="Zdrav i lijep osmijeh počinje pravilnom brigom i redovnim pregledima. Naš cilj je da se kod nas osjećate sigurno i samopouzdano, pri svakom dolasku."
         />
       </section>
@@ -83,7 +83,7 @@ export default function Home() {
       <section className="shell" aria-labelledby="usluge-title">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <Reveal>
-            <h2 id="usluge-title" className="type-display text-[clamp(3rem,9.5vw,10rem)]">
+            <h2 id="usluge-title" className="type-display text-[clamp(2rem,9.5vw,10rem)]">
               <Lines lines={['Šta', 'radimo']} />
             </h2>
           </Reveal>
@@ -104,7 +104,7 @@ export default function Home() {
         <div>
           <p className="eyebrow">Prije i poslije</p>
           <Reveal>
-            <h2 id="rezultati-title" className="type-display mt-6 text-[clamp(2.8rem,6.8vw,7rem)]">
+            <h2 id="rezultati-title" className="type-display mt-6 text-[clamp(2rem,6.8vw,7rem)]">
               <Lines lines={['Razlika', <span key="g" className="text-gold">se vidi.</span>]} />
             </h2>
           </Reveal>
@@ -130,13 +130,13 @@ export default function Home() {
         />
         <div>
           <Reveal>
-            <h2 id="tim-title" className="type-display text-[clamp(2.6rem,5.6vw,6rem)]">
+            <h2 id="tim-title" className="type-display text-[clamp(2rem,5.6vw,6rem)]">
               <Lines lines={['Dr. Edina', 'Karić']} />
             </h2>
           </Reveal>
           <Reveal className="fade" delay={0.15}>
             <p className="mt-4 font-semibold text-gold">Doktorica stomatologije</p>
-            <p className="mt-8 max-w-[30ch] text-[clamp(1.4rem,2.2vw,2rem)] font-medium leading-snug tracking-[-0.02em]">
+            <p className="mt-8 max-w-[30ch] text-[clamp(1.25rem,2.2vw,2rem)] font-medium leading-snug tracking-[-0.02em]">
               Spoj stručnosti, predanosti i iskrene brige za pacijente.
             </p>
             <p className="mt-6 max-w-[44ch] text-lg text-muted">
@@ -156,7 +156,7 @@ export default function Home() {
             <h2 id="recenzije-title" className="sr-only">
               Recenzije pacijenata
             </h2>
-            <Counter value={5} className="type-display block text-[clamp(7rem,19vw,17rem)] leading-[0.8] text-gold" />
+            <Counter value={5} className="type-display block text-[clamp(4.5rem,19vw,17rem)] leading-[0.8] text-gold" />
             <p className="mt-6 text-2xl tracking-[0.2em] text-gold" aria-label="5 od 5 zvjezdica">
               ★★★★★
             </p>
@@ -172,7 +172,7 @@ export default function Home() {
                   <blockquote
                     className={
                       i === 0
-                        ? 'text-[clamp(1.4rem,2.4vw,2.1rem)] font-medium leading-snug tracking-[-0.02em]'
+                        ? 'text-[clamp(1.25rem,2.4vw,2.1rem)] font-medium leading-snug tracking-[-0.02em]'
                         : 'text-xl leading-snug'
                     }
                   >
