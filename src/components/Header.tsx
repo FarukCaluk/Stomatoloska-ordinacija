@@ -47,7 +47,20 @@ export function Header() {
         } ${hidden && !open ? '-translate-y-full' : ''}`}
       >
         <div className="shell flex h-20 items-center justify-between gap-6">
-          <Link href="/" aria-label="Dr. Karić, početna" onClick={close} className="shrink-0">
+          <Link
+            href="/"
+            aria-label="Dr. Karić, početna"
+            onClick={(e) => {
+              close();
+              // Already home: a same-page link does nothing, so take the visitor back to the top.
+              if (pathname === '/') {
+                e.preventDefault();
+                if (lenis) lenis.scrollTo(0);
+                else window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+            className="shrink-0"
+          >
             <Image src={logo} alt="Dr. Karić stomatološka ordinacija" className="h-10 w-auto sm:h-11" sizes="140px" loading="eager" />
           </Link>
 
