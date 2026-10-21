@@ -61,8 +61,28 @@ export function toothSDF(x: number, y: number, z: number) {
   return smin(d, roots, 0.16);
 }
 
-/** Polygonizes the tooth SDF into flat position/normal arrays (runs in a Web Worker). */
-export function buildToothArrays(resolution = 84) {
+/** Dentin: the same shape pulled ~0.07 inward, so a thin enamel shell remains around it. */
+export const dentinSDF = (x: number, y: number, z: number) => toothSDF(x, y, z) + 0.07;
+
+/** Pulp: chamber in the crown plus one canal down each root (same bend as the roots). */
+export function pulpSDF(x: number, y: number, z: number) {
+  const bx = y < 0 ? x - 0.08 * y * y : x;
+  const chamber = ellipsoid(x, y - 0.33, z, 0.2, 0.11, 0.16);
+  const canals = Math.min(
+    roundCone(bx, y, z, -0.13, 0.25, 0, -0.235, -0.72, 0.03, 0.065, 0.032),
+    roundCone(bx, y, z, 0.13, 0.25, 0, 0.27, -0.68, -0.03, 0.06, 0.032),
+  );
+  return smin(chamber, canals, 0.12);
+}
+
+/** Crown cap: the tooth above the gum line, a hair larger so it sits over the prepared tooth. */
+export const crownSDF = (x: number, y: number, z: number) => smax(toothSDF(x, y, z) - 0.012, 0.13 - y, 0.03);
+
+export const LAYERS = { enamel: toothSDF, dentin: dentinSDF, pulp: pulpSDF, crown: crownSDF };
+export type Layer = keyof typeof LAYERS;
+
+/** Polygonizes an SDF into flat position/normal arrays (runs in a Web Worker). */
+export function polygonize(sdf: (x: number, y: number, z: number) => number, resolution = 84) {
   const mc = new MarchingCubes(resolution, new MeshBasicMaterial(), false, false, 160000);
   mc.isolation = 0;
   const { size, size2, halfsize, field } = mc;
@@ -71,7 +91,7 @@ export function buildToothArrays(resolution = 84) {
     for (let j = 0; j < size; j++) {
       const y = (j - halfsize) / halfsize;
       for (let i = 0; i < size; i++) {
-        field[k * size2 + j * size + i] = -toothSDF((i - halfsize) / halfsize, y, z);
+        field[k * size2 + j * size + i] = -sdf((i - halfsize) / halfsize, y, z);
       }
     }
   }
