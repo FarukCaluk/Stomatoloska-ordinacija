@@ -59,8 +59,12 @@ export function HeroTooth({ className }: { className?: string }) {
 
   return (
     <div ref={root} aria-hidden className={className}>
-      <div className="tooth-poster absolute inset-0 transition-opacity duration-700" style={{ opacity: live ? 0 : 1 }}>
-        <Image src={poster} alt="" fill loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 60vw, 100vw" className="object-contain" />
+      {/* phones: zoomed in so the tooth, not the empty render margin, fills the box */}
+      <div
+        className="tooth-poster absolute inset-0 transition-opacity duration-700 max-lg:origin-[50%_82%] max-lg:scale-[1.23]"
+        style={{ opacity: live ? 0 : 1 }}
+      >
+        <Image src={poster} alt="" fill loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 60vw, 120vw" className="object-contain" />
       </div>
       {load && (
         <div className="absolute inset-0 transition-opacity duration-700" style={{ opacity: live ? 1 : 0 }}>

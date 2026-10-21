@@ -1,65 +1,12 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import {
-  BufferAttribute,
-  BufferGeometry,
-  Color,
-  DoubleSide,
-  Group,
-  MathUtils,
-  Mesh,
-  MeshBasicMaterial,
-  MeshPhysicalMaterial,
-  MeshStandardMaterial,
-  NeutralToneMapping,
-  PerspectiveCamera,
-  PlaneGeometry,
-  PMREMGenerator,
-  RingGeometry,
-  Scene,
-  WebGLRenderer,
-} from 'three';
+import { Group, MathUtils, Mesh, PerspectiveCamera, Scene, Vector3 } from 'three';
 import { buildSmileGeometry } from './smile';
+import { createRenderer, goldMetal, loadLayers, porcelain, studioEnvironment } from './studio';
 
-const SMILE_ARC = Math.PI * 0.62;
+const SMILE_ARC = Math.PI * 0.8;
 const SPIN_START = -0.35;
-const GOLD = '#c9a35c';
-
-type Panel = { color: string; intensity: number; at: [number, number, number]; size: [number, number]; ring?: number };
-
-// White soft boxes plus a gold rim light, baked once into an environment map.
-const PANELS: Panel[] = [
-  { color: '#ffffff', intensity: 2.6, at: [0, 5, 2], size: [10, 3] },
-  { color: '#ffffff', intensity: 1.4, at: [-6, 1, 3], size: [3, 8] },
-  { color: GOLD, intensity: 7, at: [6, -1, -2], size: [3, 10] },
-  { color: '#ffffff', intensity: 1.2, at: [0, 0, 9], size: [4, 4], ring: 0 },
-  { color: GOLD, intensity: 3, at: [-3, -5, -4], size: [6, 6], ring: 0.5 },
-];
-
-function studioEnvironment(renderer: WebGLRenderer) {
-  const scene = new Scene();
-  for (const p of PANELS) {
-    const panel = new Mesh(
-      p.ring === undefined ? new PlaneGeometry(1, 1) : new RingGeometry(p.ring, 1, 48),
-      new MeshBasicMaterial({ color: new Color(p.color).multiplyScalar(p.intensity), side: DoubleSide }),
-    );
-    panel.position.set(...p.at);
-    panel.scale.set(p.size[0], p.size[1], 1);
-    panel.lookAt(0, 0, 0);
-    scene.add(panel);
-  }
-  const pmrem = new PMREMGenerator(renderer);
-  const target = pmrem.fromScene(scene, 0.02);
-  pmrem.dispose();
-  scene.traverse((o) => {
-    if (o instanceof Mesh) {
-      o.geometry.dispose();
-      (o.material as MeshBasicMaterial).dispose();
-    }
-  });
-  return target;
-}
 
 /** Live porcelain tooth. Desktop only; phones get the pre-rendered poster of the same frame. */
 export default function ToothScene({ className, onReady }: { className?: string; onReady: () => void }) {
@@ -68,11 +15,7 @@ export default function ToothScene({ className, onReady }: { className?: string;
 
   useEffect(() => {
     const el = host.current!;
-    const renderer = new WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
-    renderer.toneMapping = NeutralToneMapping;
-    renderer.domElement.style.cssText = 'display:block;width:100%;height:100%';
-    el.appendChild(renderer.domElement);
+    const renderer = createRenderer(el);
 
     const scene = new Scene();
     const camera = new PerspectiveCamera(30, 1, 0.1, 50);
@@ -85,25 +28,15 @@ export default function ToothScene({ className, onReady }: { className?: string;
     group.position.y = -0.08;
     scene.add(group);
 
-    const tooth = new Mesh(
-      new BufferGeometry(),
-      new MeshPhysicalMaterial({
-        color: '#f3eee4',
-        roughness: 0.24,
-        clearcoat: 1,
-        clearcoatRoughness: 0.05,
-        envMapIntensity: 1.15,
-      }),
-    );
+    const tooth = new Mesh(undefined, porcelain());
     tooth.scale.setScalar(1.22);
     tooth.rotation.z = -0.1;
-    const smile = new Mesh(
-      buildSmileGeometry(SMILE_ARC),
-      new MeshStandardMaterial({ color: GOLD, metalness: 1, roughness: 0.2, envMapIntensity: 1.6 }),
-    );
-    smile.position.set(0.04, 0.02, 0.62);
-    smile.rotation.set(0.55, 0, -Math.PI / 2 - SMILE_ARC / 2);
-    smile.scale.setScalar(0.92);
+    // Across the middle of the tooth, floating just in front of it and face-on in the opening
+    // pose (it turns with the tooth, so undo the starting spin), so it reads like the logo.
+    const smile = new Mesh(buildSmileGeometry(SMILE_ARC), goldMetal());
+    smile.position.set(0.04, 0.45, 0.86).applyAxisAngle(new Vector3(0, 1, 0), -SPIN_START);
+    smile.rotation.set(0.15, -SPIN_START, -Math.PI / 2 - SMILE_ARC / 2, 'YXZ');
+    smile.scale.setScalar(0.55);
     group.add(tooth, smile);
 
     const resize = () => {
@@ -157,24 +90,23 @@ export default function ToothScene({ className, onReady }: { className?: string;
       };
     }
 
-    const worker = new Worker(new URL('./tooth.worker.ts', import.meta.url), { type: 'module' });
-    worker.onmessage = async ({ data }: MessageEvent<{ position: Float32Array; normal: Float32Array }>) => {
-      worker.terminate();
-      tooth.geometry.setAttribute('position', new BufferAttribute(data.position, 3));
-      tooth.geometry.setAttribute('normal', new BufferAttribute(data.normal, 3));
-      tooth.geometry.computeBoundingSphere();
+    const build = loadLayers(['enamel'], 84);
+    let disposed = false;
+    build.done.then(async ({ enamel }) => {
+      if (disposed || !enamel) return;
+      tooth.geometry = enamel;
       await renderer.compileAsync(scene, camera); // compiles shaders without freezing the page
-      if (!host.current) return;
+      if (disposed) return;
       renderer.render(scene, camera);
       started = true;
       last = performance.now();
       if (visible) renderer.setAnimationLoop(tick);
       ready.current();
-    };
-    worker.postMessage(84);
+    });
 
     return () => {
-      worker.terminate();
+      disposed = true;
+      build.cancel();
       io.disconnect();
       ro.disconnect();
       window.removeEventListener('pointermove', onMove);
