@@ -184,6 +184,25 @@
   .curtain { display: none; }
 }
 
+/* Anatomy stills (phones): the next layer is scanned in from below, X-ray style. */
+.scan-out { clip-path: inset(0 0 100% 0); }
+.scan-line {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 22%, var(--color-gold) 50%, transparent 78%) top / 100% 2px no-repeat,
+    linear-gradient(to bottom, rgb(201 163 92 / 0.14), transparent 12%);
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scan-in { animation: scan-in 0.9s var(--ease-expo) both; }
+  .scan-out { animation: scan-out 0.9s var(--ease-expo) both; }
+  .scan-line { animation: scan-line 0.9s var(--ease-expo) both; }
+}
+@keyframes scan-in { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
+@keyframes scan-out { from { clip-path: inset(0); } to { clip-path: inset(0 0 100% 0); } }
+@keyframes scan-line { from { translate: 0 100%; opacity: 1; } 75% { opacity: 1; } to { translate: 0 0; opacity: 0; } }
+
 @keyframes curtain { to { translate: 0 -101%; } }
 @keyframes line-up { from { translate: 0 110%; } }
 @keyframes fade-up { from { opacity: 0; translate: 0 1.5rem; } }

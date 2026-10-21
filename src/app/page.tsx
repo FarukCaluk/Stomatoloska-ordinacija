@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
-import edina from '@/assets/img/dr-edina-karic-1440.webp';
+import timPacijent from '@/assets/img/tim-pacijent.webp';
 import poslije from '@/assets/img/rezultat-2-poslije.webp';
 import prije from '@/assets/img/rezultat-2-prije.webp';
 import { CompareSlider } from '@/components/CompareSlider';
@@ -10,11 +11,25 @@ import { Marquee } from '@/components/Marquee';
 import { Parallax } from '@/components/Parallax';
 import { Reveal } from '@/components/Reveal';
 import { ScrubText } from '@/components/ScrubText';
-import { ServiceStack } from '@/components/ServiceStack';
+import { AnatomySection } from '@/components/AnatomySection';
 import { HeroTooth } from '@/components/three/HeroTooth';
-import { reviews, services, site } from '@/lib/site';
+import { formatDate, posts } from '@/lib/posts';
+import { priceGroups } from '@/lib/prices';
+import { reviews, site } from '@/lib/site';
 
 export const metadata: Metadata = { alternates: { canonical: '/' } };
+
+const credentials = [
+  'Diplomirala na Stomatološkom fakultetu Univerziteta u Sarajevu 2014.',
+  'Članica Zdravstvenog savjeta Općine Kakanj',
+  'Autorica stručnog teksta u časopisu dentBiH',
+  'Učesnica brojnih stomatoloških kongresa i kurseva',
+];
+
+// A few anchor prices for the teaser; the full list lives on /cijene.
+const keyPrices = ['Prvi pregled i savjetovanje', 'Uklanjanje kamenca i poliranje', 'Kompozitna (bijela) plomba', 'Cirkonijska krunica']
+  .map((name) => priceGroups.flatMap((g) => g.rows).find((r) => r.name === name)!)
+  .filter(Boolean);
 
 const facts = [
   { big: '5,0', small: 'Ocjena na Googleu' },
@@ -29,12 +44,12 @@ export default function Home() {
       <section className="relative isolate overflow-clip lg:min-h-[100svh]" aria-labelledby="hero-title">
         <div
           aria-hidden
-          className="absolute inset-0 -z-10 bg-[radial-gradient(55%_50%_at_66%_40%,rgb(201_163_92/0.18),transparent_70%)]"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(75%_38%_at_50%_26%,rgb(201_163_92/0.16),transparent_70%)] lg:bg-[radial-gradient(55%_50%_at_66%_40%,rgb(201_163_92/0.18),transparent_70%)]"
         />
-        <HeroTooth className="relative mx-auto mt-20 h-72 w-full max-w-sm [mask-image:linear-gradient(to_bottom,#000_72%,transparent)] lg:absolute lg:inset-y-0 lg:left-[28%] lg:right-[-6%] lg:top-0 lg:mt-0 lg:h-auto lg:max-w-none lg:[mask-image:none]" />
+        <HeroTooth className="relative mx-auto mt-22 h-[min(96vw,26rem)] w-full max-w-[28rem] [mask-image:linear-gradient(to_bottom,#000_80%,transparent)] lg:absolute lg:inset-y-0 lg:left-[28%] lg:right-[-6%] lg:top-0 lg:mt-0 lg:h-auto lg:max-w-none lg:[mask-image:none]" />
 
         {/* Phones: plain document flow with fixed sizes, so nothing jumps when the browser bar hides */}
-        <div className="shell relative -mt-4 flex flex-col pb-14 lg:mt-0 lg:min-h-[100svh] lg:justify-end lg:pb-14 lg:pt-32">
+        <div className="shell relative -mt-8 flex flex-col pb-14 lg:mt-0 lg:min-h-[100svh] lg:justify-end lg:pb-14 lg:pt-32">
           <p className="eyebrow hero-fade text-center lg:text-left">Stomatološka ordinacija, Kakanj</p>
           <h1
             id="hero-title"
@@ -80,25 +95,12 @@ export default function Home() {
         />
       </section>
 
-      <section className="shell" aria-labelledby="usluge-title">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <Reveal>
-            <h2 id="usluge-title" className="type-display text-[clamp(2rem,9.5vw,10rem)]">
-              <Lines lines={['Šta', 'radimo']} />
-            </h2>
-          </Reveal>
-          <Reveal className="fade" delay={0.15}>
-            <p className="max-w-[34ch] text-lg text-muted">
-              Od redovne kontrole do potpuno novog osmijeha. Plan liječenja pravimo tek nakon pregleda i razgovora s
-              vama.
-            </p>
-            <Link href="/usluge" className="link-line mt-5 inline-block font-semibold">
-              Sve usluge →
-            </Link>
-          </Reveal>
-        </div>
-        <ServiceStack services={services} />
-      </section>
+      <AnatomySection />
+      <div className="shell flex justify-end pt-4">
+        <Link href="/usluge" className="link-line font-semibold">
+          Sve usluge →
+        </Link>
+      </div>
 
       <section className="shell mt-[clamp(6rem,14vw,12rem)] grid items-center gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-20" aria-labelledby="rezultati-title">
         <div>
@@ -122,10 +124,10 @@ export default function Home() {
 
       <section className="shell mt-[clamp(6rem,14vw,12rem)] grid items-center gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20" aria-labelledby="tim-title">
         <Parallax
-          src={edina}
-          alt="Dr. Edina Karić u ordinaciji"
+          src={timPacijent}
+          alt="Dr. Edina Karić i sestra Aldijana uz nasmijanu pacijenticu u stomatološkoj stolici"
           sizes="(min-width: 1024px) 45vw, 100vw"
-          position="50% 20%"
+          position="50% 35%"
           className="aspect-[4/5] rounded-[1.75rem] border border-line"
         />
         <div>
@@ -143,6 +145,14 @@ export default function Home() {
               Uz sestru Aldijanu brine o svakom pacijentu smireno, ljubazno i bez žurbe, od prvog pregleda do
               završnog rada.
             </p>
+            <ul className="mt-8 grid gap-3 border-t border-line pt-8">
+              {credentials.map((c) => (
+                <li key={c} className="flex gap-3">
+                  <span aria-hidden className="mt-[0.6em] size-1.5 shrink-0 rounded-full bg-gold" />
+                  {c}
+                </li>
+              ))}
+            </ul>
             <Link href="/o-nama" className="btn btn-ghost mt-10">
               Upoznajte tim
             </Link>
@@ -183,6 +193,85 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="shell grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-20" aria-labelledby="cijene-title">
+        <div>
+          <Reveal>
+            <h2 id="cijene-title" className="type-display text-[clamp(2rem,5.6vw,6rem)]">
+              <Lines lines={['Bez', <span key="g" className="text-gold">iznenađenja.</span>]} />
+            </h2>
+          </Reveal>
+          <Reveal className="fade" delay={0.15}>
+            <p className="mt-6 max-w-[40ch] text-lg text-muted">
+              Okvirne cijene su javne, a tačnu cijenu svakog koraka dobijete na besplatnom prvom pregledu, prije nego
+              što bilo šta počne.
+            </p>
+            <Link href="/cijene" className="btn btn-ghost mt-8">
+              Cijeli cjenovnik
+            </Link>
+          </Reveal>
+        </div>
+        <Reveal className="fade">
+          <dl className="divide-y divide-line rounded-[1.75rem] border border-line bg-panel px-6 py-2 sm:px-8">
+            {keyPrices.map((row) => (
+              <div key={row.name} className="flex items-baseline justify-between gap-6 py-5">
+                <dt>
+                  {row.name}
+                  {row.note && <span className="mt-0.5 block text-sm text-muted">{row.note}</span>}
+                </dt>
+                <dd className={`shrink-0 font-semibold tabular-nums ${row.price === 'Besplatno' ? 'text-gold' : ''}`}>
+                  {row.price}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
+      </section>
+
+      <section className="shell py-[clamp(6rem,14vw,12rem)]" aria-labelledby="savjeti-title">
+        <div className="flex flex-wrap items-end justify-between gap-6">
+          <Reveal>
+            <h2 id="savjeti-title" className="type-display text-[clamp(2rem,5.6vw,6rem)]">
+              <Lines lines={['Savjeti']} />
+            </h2>
+          </Reveal>
+          <Link href="/novosti" className="link-line font-semibold">
+            Sve novosti →
+          </Link>
+        </div>
+        <div className="mt-10 grid gap-5 md:grid-cols-3">
+          {posts.slice(0, 3).map((p, i) => (
+            <Reveal key={p.slug} className="fade" delay={i * 0.06}>
+              <Link
+                href={`/novosti/${p.slug}`}
+                className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-line bg-panel transition-colors duration-300 hover:border-gold/60"
+              >
+                {p.image && (
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    <Image
+                      src={p.image}
+                      alt={p.imageAlt ?? ''}
+                      fill
+                      sizes="(min-width: 768px) 33vw, 100vw"
+                      className="object-cover object-[50%_30%] transition-transform duration-700 ease-expo group-hover:scale-105"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-1 flex-col p-6 sm:p-8">
+                  <p className="text-sm text-muted">{formatDate(p.date)}</p>
+                  <p className="mt-3 text-[1.25rem] font-semibold leading-tight tracking-[-0.02em]">{p.title}</p>
+                  <span className="mt-auto pt-6 font-semibold text-gold">
+                    Pročitajte više{' '}
+                    <span aria-hidden className="inline-block transition-transform duration-300 group-hover:translate-x-1">
+                      →
+                    </span>
+                  </span>
+                </div>
+              </Link>
+            </Reveal>
+          ))}
         </div>
       </section>
     </main>
