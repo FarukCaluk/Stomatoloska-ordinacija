@@ -5,7 +5,7 @@ import hodnik from '@/assets/img/hodnik-1440.webp';
 import ordinacija1 from '@/assets/img/ordinacija-1-1440.webp';
 import ordinacija2 from '@/assets/img/ordinacija-2-1440.webp';
 import recepcija from '@/assets/img/recepcija-1440.webp';
-import tim from '@/assets/img/tim-1440.webp';
+import timPacijent from '@/assets/img/tim-pacijent.webp';
 import ulaz from '@/assets/img/ulaz-1440.webp';
 import { HorizontalGallery } from '@/components/HorizontalGallery';
 import { Lines } from '@/components/Lines';
@@ -41,7 +41,7 @@ export default function ONamaPage() {
             src={edina}
             alt="Dr. Edina Karić u ordinaciji"
             sizes="(min-width: 1024px) 55vw, 100vw"
-            position="50% 20%"
+            position="50% 15%"
             preload
             className="aspect-[4/5] rounded-[1.75rem] border border-line sm:aspect-[10/9]"
           />
@@ -81,17 +81,29 @@ export default function ONamaPage() {
         </div>
       </section>
 
-      <section className="mt-[clamp(6rem,14vw,12rem)]" aria-label="Tim zajedno">
+      <section
+        className="shell mt-[clamp(6rem,14vw,12rem)] grid items-center gap-10 lg:grid-cols-12 lg:gap-16"
+        aria-labelledby="zajedno-title"
+      >
         <Parallax
-          src={tim}
-          alt="Dr. Edina Karić i sestra Aldijana nasmijane u ordinaciji"
-          sizes="100vw"
-          position="50% 30%"
-          className="aspect-[4/3] sm:aspect-[21/9]"
+          src={timPacijent}
+          alt="Dr. Edina Karić i sestra Aldijana uz nasmijanu pacijenticu u stomatološkoj stolici"
+          sizes="(min-width: 1024px) 45vw, 100vw"
+          position="50% 35%"
+          className="aspect-[4/5] rounded-[1.75rem] border border-line lg:col-span-6"
         />
-        <p className="shell mt-6 max-w-none text-muted">
-          Zajedno u još jednoj uspješnoj godini. Hvala pacijentima i saradnicima na povjerenju i podršci.
-        </p>
+        <div className="lg:col-span-6">
+          <Reveal>
+            <h2 id="zajedno-title" className="type-display text-[clamp(1.75rem,5vw,5.2rem)]">
+              <Lines lines={['Zajedno,', <span key="g" className="text-gold">uz vas.</span>]} />
+            </h2>
+          </Reveal>
+          <Reveal className="fade" delay={0.1}>
+            <p className="mt-6 max-w-[40ch] text-lg text-muted">
+              Zajedno u još jednoj uspješnoj godini. Hvala pacijentima i saradnicima na povjerenju i podršci.
+            </p>
+          </Reveal>
+        </div>
       </section>
 
       <div className="mt-[clamp(5rem,12vw,10rem)]">
