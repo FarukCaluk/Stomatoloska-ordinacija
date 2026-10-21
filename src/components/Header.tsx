@@ -64,9 +64,9 @@ export function Header() {
             <Image src={logo} alt="Dr. Karić stomatološka ordinacija" className="h-10 w-auto sm:h-11" sizes="140px" loading="eager" />
           </Link>
 
-          <nav aria-label="Glavna navigacija" className="hidden items-center gap-9 text-[0.95rem] lg:flex">
+          <nav aria-label="Glavna navigacija" className="hidden items-center gap-6 text-[0.95rem] lg:flex xl:gap-9">
             {nav.map((item) => {
-              const active = pathname === item.href;
+              const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
                 <Link
                   key={item.href}

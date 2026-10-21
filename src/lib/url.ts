@@ -6,4 +6,4 @@ export const siteUrl =
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
     : 'http://localhost:3000');
 
-export const routes = ['/', '/usluge', '/rezultati', '/o-nama', '/kontakt', '/zakazivanje'] as const;
+export const routes = ['/', '/usluge', '/cijene', '/rezultati', '/o-nama', '/novosti', '/kontakt', '/zakazivanje'] as const;

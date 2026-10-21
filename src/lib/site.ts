@@ -20,8 +20,10 @@ export const site = {
 
 export const nav = [
   { href: '/usluge', label: 'Usluge' },
+  { href: '/cijene', label: 'Cijene' },
   { href: '/rezultati', label: 'Rezultati' },
   { href: '/o-nama', label: 'O nama' },
+  { href: '/novosti', label: 'Novosti' },
   { href: '/kontakt', label: 'Kontakt' },
 ] as const;
 
