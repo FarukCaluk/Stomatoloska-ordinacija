@@ -9,7 +9,7 @@ import dentin from '@/assets/img/anatomija-dentin.webp';
 import krunica from '@/assets/img/anatomija-krunica.webp';
 import pulpa from '@/assets/img/anatomija-pulpa.webp';
 import { CHAPTER_COUNT } from '@/components/three/anatomy-timeline';
-import { ScrollTrigger, useGSAP } from '@/lib/gsap';
+import { gsap, ScrollTrigger, useGSAP } from '@/lib/gsap';
 
 const AnatomyScene = dynamic(() => import('./three/AnatomyScene'), { ssr: false });
 
@@ -59,8 +59,7 @@ class WebGLBoundary extends Component<{ children: ReactNode }, { failed: boolean
 
 /**
  * Desktop: a live 3D tooth scrubbed by the scroll.
- * Phones: four stills, the next layer scanned in from below whenever the chapter changes,
- * so scrolling never waits on drawing.
+ * Phones: no scroll-jacking; tap a layer (or the tooth) and its still is scanned in from below.
  */
 export function AnatomySection() {
   const section = useRef<HTMLElement>(null);
@@ -73,6 +72,13 @@ export function AnatomySection() {
   const [live, setLive] = useState<boolean | null>(null);
   const [liveReady, setLiveReady] = useState(false);
   const onReady = useCallback(() => setLiveReady(true), []);
+
+  const show = (next: number) => {
+    if (next === current.current) return;
+    setPrev(current.current);
+    current.current = next;
+    setActive(next);
+  };
 
   // Nothing extra loads until the visitor scrolls, and then only once the section is about a screen away.
   useEffect(() => {
@@ -98,20 +104,18 @@ export function AnatomySection() {
 
   useGSAP(
     () => {
-      ScrollTrigger.create({
-        trigger: section.current,
-        start: 'top top',
-        end: 'bottom bottom',
-        onUpdate: (self) => {
-          const p = self.progress;
-          progress.current = p;
-          bar.current?.style.setProperty('scale', `${p} 1`);
-          const next = Math.min(CHAPTER_COUNT - 1, Math.floor(p * CHAPTER_COUNT));
-          if (next === current.current) return;
-          setPrev(current.current);
-          current.current = next;
-          setActive(next);
-        },
+      gsap.matchMedia().add('(min-width: 1024px)', () => {
+        ScrollTrigger.create({
+          trigger: section.current,
+          start: 'top top',
+          end: 'bottom bottom',
+          onUpdate: (self) => {
+            const p = self.progress;
+            progress.current = p;
+            bar.current?.style.setProperty('scale', `${p} 1`);
+            show(Math.min(CHAPTER_COUNT - 1, Math.floor(p * CHAPTER_COUNT)));
+          },
+        });
       });
     },
     { scope: section },
@@ -120,11 +124,11 @@ export function AnatomySection() {
   const stills = live === false;
 
   return (
-    <section ref={section} aria-labelledby="anatomija-title" className="relative h-[340svh] overflow-x-clip lg:h-[460svh]">
-      <div className="shell sticky top-0 flex h-[100svh] flex-col pb-6 pt-20 lg:grid lg:grid-cols-[5fr_7fr] lg:items-center lg:gap-12 lg:py-6">
-        <div className="relative order-2 my-4 min-h-0 flex-1 max-lg:[container-type:size] lg:my-0">
+    <section ref={section} aria-labelledby="anatomija-title" className="relative overflow-x-clip lg:h-[460svh]">
+      <div className="shell flex flex-col lg:sticky lg:top-0 lg:grid lg:h-[100svh] lg:grid-cols-[5fr_7fr] lg:items-center lg:gap-12 lg:py-6">
+        <div className="relative order-3 mt-2 aspect-square w-full max-lg:[container-type:size] lg:order-2 lg:mt-0 lg:aspect-auto">
           {/* phones: sized so the tooth itself fills the space; desktop: the live scene's square */}
-          <div className="absolute left-1/2 top-1/2 aspect-square w-[min(190cqw,122cqh)] -translate-1/2 lg:relative lg:left-auto lg:top-auto lg:mx-auto lg:w-full lg:max-w-[min(100%,80svh)] lg:translate-none">
+          <div className="pointer-events-none absolute left-1/2 top-1/2 aspect-square w-[min(190cqw,122cqh)] -translate-1/2 lg:relative lg:left-auto lg:top-auto lg:mx-auto lg:w-full lg:max-w-[min(100%,80svh)] lg:translate-none">
             {chapters.map((c, i) =>
               i === 0 || stills ? (
                 <div
@@ -156,6 +160,16 @@ export function AnatomySection() {
               </div>
             )}
           </div>
+          <button
+            type="button"
+            onClick={() => show((active + 1) % CHAPTER_COUNT)}
+            aria-label="Sljedeći sloj zuba"
+            className="absolute inset-0 z-30 lg:hidden"
+          >
+            <span aria-hidden className="absolute inset-x-0 -bottom-6 text-center text-xs text-muted">
+              Dodirnite zub za sljedeći sloj
+            </span>
+          </button>
         </div>
 
         <div className="contents lg:order-1 lg:block">
@@ -165,7 +179,7 @@ export function AnatomySection() {
               Sloj po sloj.
             </h2>
 
-            <div className="mt-4 flex items-center gap-4 lg:mt-10">
+            <div className="mt-10 hidden items-center gap-4 lg:flex">
               <span className="font-semibold tabular-nums text-gold">{String(active + 1).padStart(2, '0')}</span>
               <span className="relative h-px flex-1 bg-line">
                 <span ref={bar} className="absolute inset-0 origin-left bg-gold" style={{ scale: '0 1' }} />
@@ -174,7 +188,24 @@ export function AnatomySection() {
             </div>
           </div>
 
-          <div className="relative order-3 min-h-[10.5rem] sm:min-h-[9rem] lg:mt-8 lg:min-h-[13rem]">
+          {/* phones: pick a layer directly */}
+          <div className="relative z-40 order-2 mt-6 grid grid-cols-4 gap-1.5 lg:hidden">
+            {chapters.map((c, i) => (
+              <button
+                key={c.title}
+                type="button"
+                aria-pressed={i === active}
+                onClick={() => show(i)}
+                className={`h-11 rounded-full border text-sm font-semibold transition-colors duration-300 ${
+                  i === active ? 'border-gold bg-gold text-bg' : 'border-line text-muted'
+                }`}
+              >
+                {c.title}
+              </button>
+            ))}
+          </div>
+
+          <div className="relative order-4 mt-12 min-h-[10.5rem] sm:min-h-[9rem] lg:mt-8 lg:min-h-[13rem]">
             {chapters.map((c, i) => (
               <article
                 key={c.title}

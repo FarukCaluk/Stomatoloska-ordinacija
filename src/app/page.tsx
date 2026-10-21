@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
+import { getImageProps } from 'next/image';
 import Link from 'next/link';
+import pregled from '@/assets/img/dr-karic-pregled.webp';
 import timPacijent from '@/assets/img/tim-pacijent.webp';
 import poslije from '@/assets/img/rezultat-2-poslije.webp';
 import prije from '@/assets/img/rezultat-2-prije.webp';
@@ -13,11 +14,23 @@ import { Reveal } from '@/components/Reveal';
 import { ScrubText } from '@/components/ScrubText';
 import { AnatomySection } from '@/components/AnatomySection';
 import { HeroTooth } from '@/components/three/HeroTooth';
-import { formatDate, posts } from '@/lib/posts';
+import { PostCard } from '@/components/PostCard';
+import { posts } from '@/lib/posts';
 import { priceGroups } from '@/lib/prices';
 import { reviews, site } from '@/lib/site';
 
 export const metadata: Metadata = { alternates: { canonical: '/' } };
+
+const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+const { props: pregledImg } = getImageProps({
+  src: pregled,
+  alt: 'Dr. Edina Karić pregleda pacijenticu u ordinaciji',
+  fill: true,
+  sizes: '(min-width: 640px) 36rem, calc(100vw - 2rem)',
+  loading: 'eager',
+  fetchPriority: 'high',
+  placeholder: 'blur',
+});
 
 const credentials = [
   'Diplomirala na Stomatološkom fakultetu Univerziteta u Sarajevu 2014.',
@@ -44,12 +57,12 @@ export default function Home() {
       <section className="relative isolate overflow-clip lg:min-h-[100svh]" aria-labelledby="hero-title">
         <div
           aria-hidden
-          className="absolute inset-0 -z-10 bg-[radial-gradient(75%_38%_at_50%_26%,rgb(201_163_92/0.16),transparent_70%)] lg:bg-[radial-gradient(55%_50%_at_66%_40%,rgb(201_163_92/0.18),transparent_70%)]"
+          className="absolute inset-0 -z-10 hidden bg-[radial-gradient(55%_50%_at_66%_40%,rgb(201_163_92/0.18),transparent_70%)] lg:block"
         />
-        <HeroTooth className="relative mx-auto mt-22 h-[min(96vw,26rem)] w-full max-w-[28rem] [mask-image:linear-gradient(to_bottom,#000_80%,transparent)] lg:absolute lg:inset-y-0 lg:left-[28%] lg:right-[-6%] lg:top-0 lg:mt-0 lg:h-auto lg:max-w-none lg:[mask-image:none]" />
+        <HeroTooth className="hidden lg:absolute lg:inset-y-0 lg:left-[28%] lg:right-[-6%] lg:top-0 lg:block" />
 
         {/* Phones: plain document flow with fixed sizes, so nothing jumps when the browser bar hides */}
-        <div className="shell relative -mt-8 flex flex-col pb-14 lg:mt-0 lg:min-h-[100svh] lg:justify-end lg:pb-14 lg:pt-32">
+        <div className="shell relative flex flex-col pb-14 pt-24 lg:min-h-[100svh] lg:justify-end lg:pb-14 lg:pt-32">
           <p className="eyebrow hero-fade text-center lg:text-left">Stomatološka ordinacija, Kakanj</p>
           <h1
             id="hero-title"
@@ -57,7 +70,22 @@ export default function Home() {
           >
             <Lines lines={['Osmijeh', 'koji traje.']} />
           </h1>
-          <div className="mt-8 flex flex-col gap-7 border-t border-line pt-7 lg:mt-10 lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:pt-8">
+          {/* Phones: a real treatment photo with the Google rating instead of the 3D tooth.
+              The empty <source> keeps large screens from downloading it at all. */}
+          <figure
+            className="hero-fade relative mx-auto mt-7 aspect-square w-full max-w-xl overflow-hidden rounded-[1.75rem] border border-line lg:hidden"
+            style={{ '--d': '0.05s' } as React.CSSProperties}
+          >
+            <picture>
+              <source media="(min-width: 1024px)" srcSet={BLANK} />
+              <img {...pregledImg} alt={pregledImg.alt} className="object-cover object-[50%_52%]" />
+            </picture>
+            <div aria-hidden className="absolute inset-x-0 bottom-0 h-2/5 bg-[linear-gradient(to_top,rgb(0_0_0/0.55),transparent)]" />
+            <figcaption className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full border border-white/15 bg-black/45 px-3.5 py-2 text-sm text-ink backdrop-blur-md">
+              <span className="font-semibold text-gold">★ 5,0</span> na Googleu
+            </figcaption>
+          </figure>
+          <div className="relative mt-7 flex flex-col gap-7 lg:mt-10 lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:border-t lg:border-line lg:pt-8">
             <p className="hero-fade mx-auto max-w-[38ch] text-center text-base text-muted sm:text-lg lg:mx-0 lg:text-left lg:text-xl" style={{ '--d': '0.1s' } as React.CSSProperties}>
               Pregledi, estetika i protetika uz individualan pristup i savremenu opremu. Prvi pregled je besplatan.
             </p>
@@ -241,35 +269,10 @@ export default function Home() {
             Sve novosti →
           </Link>
         </div>
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
           {posts.slice(0, 3).map((p, i) => (
             <Reveal key={p.slug} className="fade" delay={i * 0.06}>
-              <Link
-                href={`/novosti/${p.slug}`}
-                className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-line bg-panel transition-colors duration-300 hover:border-gold/60"
-              >
-                {p.image && (
-                  <div className="relative aspect-[16/10] overflow-hidden">
-                    <Image
-                      src={p.image}
-                      alt={p.imageAlt ?? ''}
-                      fill
-                      sizes="(min-width: 768px) 33vw, 100vw"
-                      className="object-cover object-[50%_30%] transition-transform duration-700 ease-expo group-hover:scale-105"
-                    />
-                  </div>
-                )}
-                <div className="flex flex-1 flex-col p-6 sm:p-8">
-                  <p className="text-sm text-muted">{formatDate(p.date)}</p>
-                  <p className="mt-3 text-[1.25rem] font-semibold leading-tight tracking-[-0.02em]">{p.title}</p>
-                  <span className="mt-auto pt-6 font-semibold text-gold">
-                    Pročitajte više{' '}
-                    <span aria-hidden className="inline-block transition-transform duration-300 group-hover:translate-x-1">
-                      →
-                    </span>
-                  </span>
-                </div>
-              </Link>
+              <PostCard post={p} heading="h3" />
             </Reveal>
           ))}
         </div>

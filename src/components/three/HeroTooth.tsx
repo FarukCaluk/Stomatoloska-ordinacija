@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
+import { getImageProps } from 'next/image';
 import { Component, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import poster from '@/assets/img/tooth-poster.webp';
 import { gsap, NO_REDUCE, useGSAP } from '@/lib/gsap';
@@ -19,9 +19,12 @@ class WebGLBoundary extends Component<{ children: ReactNode }, { failed: boolean
   }
 }
 
-// The live 3D (follows the mouse) runs on laptops and desktops.
-// Phones keep the pre-rendered poster of the very same frame, so they stay fast and smooth.
+// The live 3D (follows the mouse) runs on laptops and desktops; large touch screens keep the
+// pre-rendered poster of the very same frame. Phones don't show the tooth at all.
 const LIVE = '(min-width: 1024px) and (any-pointer: fine)';
+
+const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+const { props: posterImg } = getImageProps({ src: poster, alt: '', fill: true, sizes: '60vw', loading: 'eager', fetchPriority: 'high' });
 
 export function HeroTooth({ className }: { className?: string }) {
   const root = useRef<HTMLDivElement>(null);
@@ -59,12 +62,12 @@ export function HeroTooth({ className }: { className?: string }) {
 
   return (
     <div ref={root} aria-hidden className={className}>
-      {/* phones: zoomed in so the tooth, not the empty render margin, fills the box */}
-      <div
-        className="tooth-poster absolute inset-0 transition-opacity duration-700 max-lg:origin-[50%_82%] max-lg:scale-[1.23]"
-        style={{ opacity: live ? 0 : 1 }}
-      >
-        <Image src={poster} alt="" fill loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 60vw, 120vw" className="object-contain" />
+      <div className="tooth-poster absolute inset-0 transition-opacity duration-700" style={{ opacity: live ? 0 : 1 }}>
+        {/* Phones show a photo instead of the tooth, so only large screens ever fetch the poster. */}
+        <picture>
+          <source media="(min-width: 1024px)" srcSet={posterImg.srcSet} sizes={posterImg.sizes} />
+          <img {...posterImg} srcSet={undefined} sizes={undefined} src={BLANK} alt="" className="object-contain" />
+        </picture>
       </div>
       {load && (
         <div className="absolute inset-0 transition-opacity duration-700" style={{ opacity: live ? 1 : 0 }}>
