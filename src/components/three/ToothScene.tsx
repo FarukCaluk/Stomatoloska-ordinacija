@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { Group, MathUtils, Mesh, PerspectiveCamera, Scene, Vector3 } from 'three';
+import { Group, MathUtils, Mesh, PerspectiveCamera, Scene } from 'three';
 import { buildSmileGeometry } from './smile';
 import { createRenderer, goldMetal, loadLayers, porcelain, studioEnvironment } from './studio';
 
@@ -31,13 +31,17 @@ export default function ToothScene({ className, onReady }: { className?: string;
     const tooth = new Mesh(undefined, porcelain());
     tooth.scale.setScalar(1.22);
     tooth.rotation.z = -0.1;
-    // Across the middle of the tooth, floating just in front of it and face-on in the opening
-    // pose (it turns with the tooth, so undo the starting spin), so it reads like the logo.
+    group.add(tooth);
+    // Across the middle of the tooth, floating just in front of it. It sits in its own holder that
+    // follows the tilt and the mouse but not the spin, so it always stays centred and face-on.
     const smile = new Mesh(buildSmileGeometry(SMILE_ARC), goldMetal());
-    smile.position.set(0.04, 0.45, 0.86).applyAxisAngle(new Vector3(0, 1, 0), -SPIN_START);
-    smile.rotation.set(0.15, -SPIN_START, -Math.PI / 2 - SMILE_ARC / 2, 'YXZ');
+    smile.position.set(0.04, 0.45, 0.86);
+    smile.rotation.set(0.15, 0, -Math.PI / 2 - SMILE_ARC / 2);
     smile.scale.setScalar(0.55);
-    group.add(tooth, smile);
+    const smileHolder = new Group();
+    smileHolder.position.y = -0.08;
+    smileHolder.add(smile);
+    scene.add(smileHolder);
 
     const resize = () => {
       const { clientWidth: w, clientHeight: h } = el;
@@ -67,6 +71,9 @@ export default function ToothScene({ className, onReady }: { className?: string;
       group.rotation.y = MathUtils.damp(group.rotation.y, spin + pointer.x * 0.5 + scroll * 1.6, 3.5, delta);
       group.rotation.x = MathUtils.damp(group.rotation.x, -pointer.y * 0.22 + scroll * 0.45, 3.5, delta);
       group.position.y = MathUtils.damp(group.position.y, -0.08 + scroll * 1.1, 5, delta);
+      smileHolder.position.y = group.position.y;
+      smileHolder.rotation.x = group.rotation.x;
+      smileHolder.rotation.y = MathUtils.damp(smileHolder.rotation.y, pointer.x * 0.25, 3.5, delta);
       renderer.render(scene, camera);
     };
 
@@ -85,6 +92,8 @@ export default function ToothScene({ className, onReady }: { className?: string;
         renderer.setAnimationLoop(null);
         group.rotation.set(0, SPIN_START, 0);
         group.position.y = -0.08;
+        smileHolder.rotation.set(0, 0, 0);
+        smileHolder.position.y = -0.08;
         renderer.render(scene, camera);
         return renderer.domElement.toDataURL('image/png');
       };
