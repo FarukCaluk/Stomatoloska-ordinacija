@@ -100,7 +100,8 @@ export default async function NovostPage({ params }: PageProps<'/novosti/[slug]'
               preload
               placeholder="blur"
               sizes="(min-width: 768px) 44rem, 100vw"
-              className="mt-10 h-auto w-full rounded-[1.75rem] border border-line"
+              className="mx-auto mt-10 h-auto w-full rounded-[1.75rem] border border-line"
+              style={{ maxWidth: `min(100%, calc(75svh * ${post.image.width / post.image.height}))` }}
             />
           )}
 

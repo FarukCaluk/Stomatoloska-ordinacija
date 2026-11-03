@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
-import detalj from '@/assets/img/ordinacija-detalj-1440.webp';
+import ordinacija1 from '@/assets/img/ordinacija-1.jpg';
 import { Lines } from '@/components/Lines';
 import { PageHero } from '@/components/PageHero';
-import { Parallax } from '@/components/Parallax';
 import { Reveal } from '@/components/Reveal';
 import { ScrollyServices } from '@/components/ScrollyServices';
 import { Steps } from '@/components/Steps';
@@ -34,12 +34,13 @@ export default function UslugePage() {
       />
 
       <div className="shell">
-        <Parallax
-          src={detalj}
-          alt="Stomatološka stolica i radna površina u ordinaciji"
-          sizes="100vw"
+        <Image
+          src={ordinacija1}
+          alt="Ordinacija 1 sa stomatološkom stolicom i radnim pultom"
+          sizes="(min-width: 1152px) 72rem, 100vw"
           preload
-          className="aspect-[4/3] rounded-[1.75rem] border border-line sm:aspect-[21/9]"
+          placeholder="blur"
+          className="mx-auto h-auto w-full max-w-[min(100%,calc(70svh*1.5))] rounded-[1.75rem] border border-line"
         />
       </div>
 

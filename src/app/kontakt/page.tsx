@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import ulaz from '@/assets/img/ulaz-1440.webp';
+import ulaz from '@/assets/img/ulaz.jpg';
 import { OpenStatus } from '@/components/OpenStatus';
 import { PageHero } from '@/components/PageHero';
-import { Parallax } from '@/components/Parallax';
+import Image from 'next/image';
 import { site } from '@/lib/site';
 
 export const metadata: Metadata = {
@@ -80,14 +80,19 @@ export default function KontaktPage() {
         </div>
       </section>
 
-      <section className="shell py-[clamp(5rem,12vw,10rem)]" aria-label="Ulaz u ordinaciju">
-        <Parallax
-          src={ulaz}
-          alt="Ulaz u ordinaciju noću, osvijetljen natpis Dr. Karić"
-          sizes="100vw"
-          className="aspect-[4/3] rounded-[1.75rem] border border-line sm:aspect-[21/9]"
-        />
-        <p className="mt-5 text-muted">Ulaz u ordinaciju, Branilaca 3, Kakanj.</p>
+      {/* Edge to edge. Phones show the whole photo; wide screens a 21:9 band framed on the sign and the door. */}
+      <section className="py-[clamp(5rem,12vw,10rem)]" aria-label="Ulaz u ordinaciju">
+        <div className="relative aspect-[3/2] w-full border-y border-line lg:aspect-[21/9] lg:max-h-[80svh]">
+          <Image
+            src={ulaz}
+            alt="Ulaz u ordinaciju sa natpisom Dr. Karić, Branilaca 3"
+            fill
+            sizes="100vw"
+            placeholder="blur"
+            className="object-cover object-[50%_42%]"
+          />
+        </div>
+        <p className="shell mt-5 text-muted">Ulaz u ordinaciju, Branilaca 3, Kakanj.</p>
       </section>
     </main>
   );

@@ -1,9 +1,9 @@
 import type { StaticImageData } from 'next/image';
-import ordinacija1 from '@/assets/img/ordinacija-1-1440.webp';
-import ordinacija2 from '@/assets/img/ordinacija-2-1440.webp';
-import detalj from '@/assets/img/ordinacija-detalj-1440.webp';
-import rezultat1 from '@/assets/img/rezultat-1-800.webp';
-import rezultat3 from '@/assets/img/rezultat-3-800.webp';
+import pregled from '@/assets/img/dr-karic-pregled.jpg';
+import ordinacija1i2 from '@/assets/img/ordinacija-1-i-2.jpg';
+import ordinacija2 from '@/assets/img/ordinacija-2.jpg';
+import rezultatEstetika from '@/assets/img/rezultat-estetika.jpg';
+import rezultatProtetika from '@/assets/img/rezultat-protetika.jpg';
 
 export const site = {
   name: 'Stomatološka ordinacija Dr. Karić',
@@ -44,8 +44,8 @@ export const services: Service[] = [
     short: 'Redovni pregledi, uklanjanje kamenca i poliranje.',
     text: 'Redovni pregledi su najjednostavniji način da sačuvate zube. Problem uočen na vrijeme je manji, liječenje kraće, a trošak niži.',
     tags: ['Stomatološki pregled', 'Uklanjanje kamenca', 'Poliranje', 'Savjeti za njegu'],
-    image: ordinacija1,
-    alt: 'Ordinacija sa stomatološkom stolicom i ekranima na zidu',
+    image: pregled,
+    alt: 'Dr. Edina Karić pregleda pacijenticu u ordinaciji',
   },
   {
     id: 'estetika',
@@ -53,8 +53,8 @@ export const services: Service[] = [
     short: 'Fasete, estetske ispune i oblikovanje osmijeha.',
     text: 'Oblik, boja i linija zuba koji prate vaše lice i način na koji se smijete. Cilj je prirodan izgled, a ne osmijeh koji djeluje vještački.',
     tags: ['Fasete', 'Estetske ispune', 'Oblikovanje osmijeha'],
-    image: rezultat3,
-    alt: 'Osmijeh prije i poslije estetskog rada',
+    image: rezultatEstetika,
+    alt: 'Prednji zubi prije i poslije estetskog rada',
   },
   {
     id: 'protetika',
@@ -62,8 +62,8 @@ export const services: Service[] = [
     short: 'Protetski radovi po mjeri, za funkciju i izgled.',
     text: 'Protetski radovi po mjeri koji vraćaju i funkciju i izgled zuba, da opet jedete, govorite i smijete se bez razmišljanja.',
     tags: ['Krunice', 'Mostovi', 'Protetska rehabilitacija'],
-    image: rezultat1,
-    alt: 'Gornji zubi prije i poslije izrade novih krunica',
+    image: rezultatProtetika,
+    alt: 'Zubi prije i poslije izrade novih krunica',
   },
   {
     id: 'lijecenje',
@@ -71,8 +71,8 @@ export const services: Service[] = [
     short: 'Karijes i kanali korijena, uz anesteziju.',
     text: 'Liječenje karijesa i kanala korijena uz anesteziju. Prije svakog zahvata objasnimo šta radimo i zašto, korak po korak.',
     tags: ['Liječenje karijesa', 'Liječenje kanala', 'Zamjena starih ispuna'],
-    image: detalj,
-    alt: 'Stomatološka stolica i instrumenti pripremljeni za zahvat',
+    image: ordinacija1i2,
+    alt: 'Ordinacija 1 i ordinacija 2, odvojene staklenom pregradom',
   },
   {
     id: 'izbjeljivanje',
@@ -81,7 +81,7 @@ export const services: Service[] = [
     text: 'Profesionalno izbjeljivanje pod nadzorom stomatologa, uz prethodni pregled kako bi postupak bio siguran za caklinu i desni.',
     tags: ['Izbjeljivanje u ordinaciji'],
     image: ordinacija2,
-    alt: 'Svijetla ordinacija sa radnim pultom i ogledalima',
+    alt: 'Ordinacija 2 sa stomatološkom stolicom ispred mramornog zida',
   },
 ];
 

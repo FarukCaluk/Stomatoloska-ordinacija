@@ -23,16 +23,16 @@ export function ScrollyServices({ services }: { services: Service[] }) {
 
   return (
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-      <div className="sticky top-28 hidden h-[calc(100svh-9rem)] overflow-hidden rounded-[1.75rem] border border-line lg:block">
+      {/* Each photo is shown whole: scaled down to fit the panel, never cropped. */}
+      <div className="sticky top-28 hidden h-[min(calc(100svh-9rem),40rem)] lg:block">
         {services.map((s, i) => (
           <Image
             key={s.id}
             src={s.image}
             alt=""
-            fill
             sizes="50vw"
-            className={`object-cover transition-[opacity,scale] duration-1000 ease-expo ${
-              i === active ? 'scale-100 opacity-100' : 'scale-105 opacity-0'
+            className={`absolute inset-0 m-auto h-auto max-h-full w-auto max-w-full rounded-[1.75rem] border border-line transition-opacity duration-1000 ease-expo ${
+              i === active ? 'opacity-100' : 'opacity-0'
             }`}
           />
         ))}
@@ -46,9 +46,7 @@ export function ScrollyServices({ services }: { services: Service[] }) {
             data-index={i}
             className="flex flex-col justify-center border-t border-line py-12 first:border-t-0 lg:min-h-[72svh] lg:py-20"
           >
-            <div className="relative mb-8 aspect-[4/3] overflow-hidden rounded-[1.75rem] border border-line lg:hidden">
-              <Image src={s.image} alt={s.alt} fill sizes="100vw" className="object-cover" />
-            </div>
+            <Image src={s.image} alt={s.alt} sizes="100vw" className="mb-8 h-auto w-full rounded-[1.75rem] border border-line lg:hidden" />
             <span
               className={`font-semibold transition-colors duration-500 ${i === active ? 'text-gold' : 'text-muted'}`}
             >

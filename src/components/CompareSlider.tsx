@@ -1,24 +1,38 @@
 'use client';
 
-import Image, { type StaticImageData } from 'next/image';
+import Image from 'next/image';
 import { useRef, type CSSProperties } from 'react';
 import { gsap, NO_REDUCE, useGSAP } from '@/lib/gsap';
+import type { BeforeAfter } from '@/lib/results';
 
-/** Before/after drag slider. A native range input does the dragging, touch and keyboard work. */
+/**
+ * Before/after drag slider over one untouched PRIJE/POSLIJE photo: both layers show the same file,
+ * shifted so the frame holds the top half or the bottom half. A native range input does the
+ * dragging, touch and keyboard work.
+ */
 export function CompareSlider({
-  before,
-  after,
-  alt,
+  result,
   sizes = '(min-width: 1024px) 50vw, 100vw',
   eager = false,
 }: {
-  before: StaticImageData;
-  after: StaticImageData;
-  alt: string;
+  result: BeforeAfter;
   sizes?: string;
   /** Set for a slider at the top of a page, where it is the largest thing on screen. */
   eager?: boolean;
 }) {
+  const { image, afterTop, frame, alt } = result;
+  const loading = eager ? 'eager' : 'lazy';
+  const half = (top: number, label: string) => (
+    <Image
+      src={image}
+      alt={label}
+      sizes={sizes}
+      loading={loading}
+      fetchPriority={eager && top ? 'high' : 'auto'}
+      className="absolute left-0 h-auto w-full max-w-none"
+      style={{ top: `${(-top / frame) * 100}%` }}
+    />
+  );
   const root = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const hint = useRef<gsap.core.Tween | null>(null);
@@ -50,11 +64,11 @@ export function CompareSlider({
     <div
       ref={root}
       className="relative self-start overflow-hidden rounded-[1.75rem] border border-line select-none"
-      style={{ '--pos': '50%' } as CSSProperties}
+      style={{ '--pos': '50%', aspectRatio: `${image.width} / ${frame}` } as CSSProperties}
     >
-      <Image src={after} alt={`Poslije: ${alt}`} sizes={sizes} loading={eager ? 'eager' : 'lazy'} fetchPriority={eager ? 'high' : 'auto'} className="block h-auto w-full" />
+      {half(afterTop, `Prije i poslije: ${alt}`)}
       <div className="absolute inset-0" style={{ clipPath: 'inset(0 calc(100% - var(--pos)) 0 0)' }}>
-        <Image src={before} alt={`Prije: ${alt}`} fill sizes={sizes} loading={eager ? 'eager' : 'lazy'} className="object-cover" />
+        {half(0, '')}
       </div>
 
       <div aria-hidden className="pointer-events-none absolute inset-y-0 left-[var(--pos)] w-0.5 -translate-x-1/2 bg-ink">

@@ -1,16 +1,18 @@
 import type { Metadata } from 'next';
-import aldijana from '@/assets/img/aldijana-1440.webp';
-import edina from '@/assets/img/dr-edina-karic-1440.webp';
-import hodnik from '@/assets/img/hodnik-1440.webp';
-import ordinacija1 from '@/assets/img/ordinacija-1-1440.webp';
-import ordinacija2 from '@/assets/img/ordinacija-2-1440.webp';
-import recepcija from '@/assets/img/recepcija-1440.webp';
-import timPacijent from '@/assets/img/tim-pacijent.webp';
-import ulaz from '@/assets/img/ulaz-1440.webp';
+import Image from 'next/image';
+import aldijana from '@/assets/img/aldijana.jpg';
+import edina from '@/assets/img/dr-edina-karic.jpg';
+import hodnik from '@/assets/img/hodnik.jpg';
+import ordinacija1 from '@/assets/img/ordinacija-1.jpg';
+import ordinacija1i2 from '@/assets/img/ordinacija-1-i-2.jpg';
+import ordinacija2 from '@/assets/img/ordinacija-2.jpg';
+import ordinacija2Pult from '@/assets/img/ordinacija-2-pult.jpg';
+import rendgen from '@/assets/img/rendgen.jpg';
+import timZajedno from '@/assets/img/tim-zajedno.jpg';
+import ulaz from '@/assets/img/ulaz.jpg';
 import { HorizontalGallery } from '@/components/HorizontalGallery';
 import { Lines } from '@/components/Lines';
 import { PageHero } from '@/components/PageHero';
-import { Parallax } from '@/components/Parallax';
 import { Reveal } from '@/components/Reveal';
 
 export const metadata: Metadata = {
@@ -20,11 +22,13 @@ export const metadata: Metadata = {
 };
 
 const space = [
-  { src: ulaz, alt: 'Ulaz u ordinaciju noću, osvijetljen natpis Dr. Karić', caption: 'Ulaz, Branilaca 3' },
-  { src: recepcija, alt: 'Recepcija i čekaonica s foteljama', caption: 'Recepcija i čekaonica' },
-  { src: hodnik, alt: 'Hodnik ordinacije sa staklenim vratima', caption: 'Hodnik' },
-  { src: ordinacija1, alt: 'Ordinacija 1 sa stomatološkom stolicom i ekranima', caption: 'Ordinacija 1' },
-  { src: ordinacija2, alt: 'Ordinacija 2 sa radnim pultom i ogledalima', caption: 'Ordinacija 2' },
+  { src: ulaz, alt: 'Ulaz u ordinaciju sa natpisom Dr. Karić, Branilaca 3', caption: 'Ulaz, Branilaca 3' },
+  { src: hodnik, alt: 'Hodnik ordinacije sa staklenim vratima i recepcijom', caption: 'Hodnik i recepcija' },
+  { src: ordinacija1, alt: 'Ordinacija 1 sa stomatološkom stolicom i dugim radnim pultom', caption: 'Ordinacija 1' },
+  { src: ordinacija2, alt: 'Ordinacija 2 sa stomatološkom stolicom ispred mramornog zida', caption: 'Ordinacija 2' },
+  { src: ordinacija2Pult, alt: 'Ordinacija 2, stolica i radni pult sa slikama zuba na zidu', caption: 'Ordinacija 2, radni pult' },
+  { src: ordinacija1i2, alt: 'Ordinacija 1 i ordinacija 2, odvojene staklenom pregradom', caption: 'Ordinacija 1 i 2' },
+  { src: rendgen, alt: 'Pacijentica na snimanju digitalnim panoramskim rendgenom', caption: 'Digitalni rendgen' },
 ];
 
 export default function ONamaPage() {
@@ -36,14 +40,14 @@ export default function ONamaPage() {
       />
 
       <section className="shell grid gap-x-16 gap-y-20 lg:grid-cols-12" aria-label="Tim">
-        <div className="lg:col-span-7">
-          <Parallax
+        <div className="lg:col-span-6">
+          <Image
             src={edina}
             alt="Dr. Edina Karić u ordinaciji"
-            sizes="(min-width: 1024px) 55vw, 100vw"
-            position="50% 15%"
+            sizes="(min-width: 1024px) 45vw, 100vw"
             preload
-            className="aspect-[4/5] rounded-[1.75rem] border border-line sm:aspect-[10/9]"
+            placeholder="blur"
+            className="h-auto w-full rounded-[1.75rem] border border-line"
           />
           <Reveal>
             <h2 className="type-display mt-10 text-[clamp(1.75rem,5vw,5.2rem)]">
@@ -59,13 +63,13 @@ export default function ONamaPage() {
           </Reveal>
         </div>
 
-        <div className="lg:col-span-5 lg:pt-[clamp(8rem,22vw,22rem)]">
-          <Parallax
+        <div className="lg:col-span-6 lg:pt-[clamp(6rem,14vw,14rem)]">
+          <Image
             src={aldijana}
             alt="Aldijana na recepciji ordinacije"
-            sizes="(min-width: 1024px) 40vw, 100vw"
-            position="50% 25%"
-            className="aspect-[4/5] rounded-[1.75rem] border border-line"
+            sizes="(min-width: 1024px) 45vw, 100vw"
+            placeholder="blur"
+            className="h-auto w-full rounded-[1.75rem] border border-line"
           />
           <Reveal>
             <h2 className="type-display mt-10 text-[clamp(1.75rem,5vw,5.2rem)]">
@@ -85,12 +89,12 @@ export default function ONamaPage() {
         className="shell mt-[clamp(6rem,14vw,12rem)] grid items-center gap-10 lg:grid-cols-12 lg:gap-16"
         aria-labelledby="zajedno-title"
       >
-        <Parallax
-          src={timPacijent}
-          alt="Dr. Edina Karić i sestra Aldijana uz nasmijanu pacijenticu u stomatološkoj stolici"
-          sizes="(min-width: 1024px) 45vw, 100vw"
-          position="50% 35%"
-          className="aspect-[4/5] rounded-[1.75rem] border border-line lg:col-span-6"
+        <Image
+          src={timZajedno}
+          alt="Dr. Edina Karić i sestra Aldijana nasmijane u hodniku ordinacije"
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          placeholder="blur"
+          className="h-auto w-full rounded-[1.75rem] border border-line lg:col-span-6"
         />
         <div className="lg:col-span-6">
           <Reveal>

@@ -1,15 +1,12 @@
 import type { Metadata } from 'next';
-import { getImageProps } from 'next/image';
+import Image, { getImageProps } from 'next/image';
 import Link from 'next/link';
-import pregled from '@/assets/img/dr-karic-pregled.webp';
-import timPacijent from '@/assets/img/tim-pacijent.webp';
-import poslije from '@/assets/img/rezultat-2-poslije.webp';
-import prije from '@/assets/img/rezultat-2-prije.webp';
+import pregled from '@/assets/img/dr-karic-pregled.jpg';
+import ordinacija1i2 from '@/assets/img/ordinacija-1-i-2.jpg';
 import { CompareSlider } from '@/components/CompareSlider';
 import { Counter } from '@/components/Counter';
 import { Lines } from '@/components/Lines';
 import { Marquee } from '@/components/Marquee';
-import { Parallax } from '@/components/Parallax';
 import { Reveal } from '@/components/Reveal';
 import { ScrubText } from '@/components/ScrubText';
 import { AnatomySection } from '@/components/AnatomySection';
@@ -17,6 +14,7 @@ import { HeroTooth } from '@/components/three/HeroTooth';
 import { PostCard } from '@/components/PostCard';
 import { posts } from '@/lib/posts';
 import { priceGroups } from '@/lib/prices';
+import { results } from '@/lib/results';
 import { reviews, site } from '@/lib/site';
 
 export const metadata: Metadata = { alternates: { canonical: '/' } };
@@ -59,7 +57,7 @@ export default function Home() {
           aria-hidden
           className="absolute inset-0 -z-10 hidden bg-[radial-gradient(55%_50%_at_66%_40%,rgb(201_163_92/0.18),transparent_70%)] lg:block"
         />
-        <HeroTooth className="hidden lg:absolute lg:inset-y-0 lg:left-[28%] lg:right-[-6%] lg:top-0 lg:block" />
+        <HeroTooth className="hidden lg:absolute lg:inset-y-0 lg:left-[38%] lg:right-[-12%] lg:top-0 lg:block" />
 
         {/* Phones: plain document flow with fixed sizes, so nothing jumps when the browser bar hides */}
         <div className="shell relative flex flex-col pb-14 pt-24 lg:min-h-[100svh] lg:justify-end lg:pb-14 lg:pt-32">
@@ -73,12 +71,12 @@ export default function Home() {
           {/* Phones: a real treatment photo with the Google rating instead of the 3D tooth.
               The empty <source> keeps large screens from downloading it at all. */}
           <figure
-            className="hero-fade relative mx-auto mt-7 aspect-square w-full max-w-xl overflow-hidden rounded-[1.75rem] border border-line lg:hidden"
+            className="hero-fade relative mx-auto mt-7 aspect-[3/2] w-full max-w-xl overflow-hidden rounded-[1.75rem] border border-line lg:hidden"
             style={{ '--d': '0.05s' } as React.CSSProperties}
           >
             <picture>
               <source media="(min-width: 1024px)" srcSet={BLANK} />
-              <img {...pregledImg} alt={pregledImg.alt} className="object-cover object-[50%_52%]" />
+              <img {...pregledImg} alt={pregledImg.alt} className="object-cover" />
             </picture>
             <div aria-hidden className="absolute inset-x-0 bottom-0 h-2/5 bg-[linear-gradient(to_top,rgb(0_0_0/0.55),transparent)]" />
             <figcaption className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full border border-white/15 bg-black/45 px-3.5 py-2 text-sm text-ink backdrop-blur-md">
@@ -147,17 +145,27 @@ export default function Home() {
             </Link>
           </Reveal>
         </div>
-        <CompareSlider before={prije} after={poslije} alt="prednji zubi nakon estetskog rada" />
+        <CompareSlider result={results[0]} />
       </section>
 
       <section className="shell mt-[clamp(6rem,14vw,12rem)] grid items-center gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20" aria-labelledby="tim-title">
-        <Parallax
-          src={timPacijent}
-          alt="Dr. Edina Karić i sestra Aldijana uz nasmijanu pacijenticu u stomatološkoj stolici"
-          sizes="(min-width: 1024px) 45vw, 100vw"
-          position="50% 35%"
-          className="aspect-[4/5] rounded-[1.75rem] border border-line"
-        />
+        {/* Whole photos, at their own shape: Dr. Karić at work, then both surgeries. */}
+        <div className="grid gap-5 lg:max-w-[34rem] lg:justify-self-end">
+          <Image
+            src={pregled}
+            alt="Dr. Edina Karić pregleda pacijenticu u ordinaciji"
+            sizes="(min-width: 1024px) 45vw, 100vw"
+            placeholder="blur"
+            className="h-auto w-full rounded-[1.75rem] border border-line"
+          />
+          <Image
+            src={ordinacija1i2}
+            alt="Ordinacija 1 i ordinacija 2, odvojene staklenom pregradom"
+            sizes="(min-width: 1024px) 45vw, 100vw"
+            placeholder="blur"
+            className="h-auto w-full rounded-[1.75rem] border border-line"
+          />
+        </div>
         <div>
           <Reveal>
             <h2 id="tim-title" className="type-display text-[clamp(2rem,5.6vw,6rem)]">
