@@ -81,11 +81,12 @@ export default function KontaktPage() {
       </section>
 
       <section className="shell py-[clamp(5rem,12vw,10rem)]" aria-label="Ulaz u ordinaciju">
-        <figure className="mx-auto max-w-4xl">
+        {/* Never wider than 64rem, nor taller than 80% of the screen (the photo is 3:2). */}
+        <figure className="mx-auto max-w-[min(64rem,calc(80svh*1.5))]">
           <Image
             src={ulaz}
             alt="Ulaz u ordinaciju sa natpisom Dr. Karić, Branilaca 3"
-            sizes="(min-width: 896px) 56rem, 100vw"
+            sizes="(min-width: 1024px) 64rem, 100vw"
             placeholder="blur"
             className="h-auto w-full rounded-[1.75rem] border border-line"
           />

@@ -20,7 +20,14 @@ export async function generateMetadata({ params }: PageProps<'/novosti/[slug]'>)
     title: post.title,
     description: post.excerpt,
     alternates: { canonical: `/novosti/${post.slug}` },
-    openGraph: { type: 'article', title: post.title, description: post.excerpt, publishedTime: post.date },
+    openGraph: {
+      type: 'article',
+      title: post.title,
+      description: post.excerpt,
+      publishedTime: post.date,
+      // openGraph set here replaces the layout's, so the shared link image has to be named again.
+      images: ['/opengraph-image.jpg'],
+    },
   };
 }
 
