@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import ulaz from '@/assets/img/ulaz.jpg';
+import ulaz from '@/assets/img/ulaz-kontakt.jpg';
 import { OpenStatus } from '@/components/OpenStatus';
 import { PageHero } from '@/components/PageHero';
 import Image from 'next/image';
@@ -80,19 +80,17 @@ export default function KontaktPage() {
         </div>
       </section>
 
-      {/* Edge to edge. Phones show the whole photo; wide screens a 21:9 band framed on the sign and the door. */}
-      <section className="py-[clamp(5rem,12vw,10rem)]" aria-label="Ulaz u ordinaciju">
-        <div className="relative aspect-[3/2] w-full border-y border-line lg:aspect-[21/9] lg:max-h-[80svh]">
+      <section className="shell py-[clamp(5rem,12vw,10rem)]" aria-label="Ulaz u ordinaciju">
+        <figure className="mx-auto max-w-4xl">
           <Image
             src={ulaz}
             alt="Ulaz u ordinaciju sa natpisom Dr. Karić, Branilaca 3"
-            fill
-            sizes="100vw"
+            sizes="(min-width: 896px) 56rem, 100vw"
             placeholder="blur"
-            className="object-cover object-[50%_42%]"
+            className="h-auto w-full rounded-[1.75rem] border border-line"
           />
-        </div>
-        <p className="shell mt-5 text-muted">Ulaz u ordinaciju, Branilaca 3, Kakanj.</p>
+          <figcaption className="mt-5 text-muted">Ulaz u ordinaciju, Branilaca 3, Kakanj.</figcaption>
+        </figure>
       </section>
     </main>
   );
