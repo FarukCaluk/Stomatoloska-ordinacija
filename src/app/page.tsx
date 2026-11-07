@@ -13,7 +13,7 @@ import { AnatomySection } from '@/components/AnatomySection';
 import { HeroTooth } from '@/components/three/HeroTooth';
 import { PostCard } from '@/components/PostCard';
 import { posts } from '@/lib/posts';
-import { priceGroups } from '@/lib/prices';
+import { FREE, priceGroups, rowLabel } from '@/lib/prices';
 import { results } from '@/lib/results';
 import { reviews, site } from '@/lib/site';
 
@@ -38,8 +38,13 @@ const credentials = [
 ];
 
 // A few anchor prices for the teaser; the full list lives on /cijene.
-const keyPrices = ['Prvi pregled i savjetovanje', 'Uklanjanje kamenca i poliranje', 'Kompozitna (bijela) plomba', 'Cirkonijska krunica']
-  .map((name) => priceGroups.flatMap((g) => g.rows).find((r) => r.name === name)!)
+const keyPrices = [
+  'Prvi pregled i savjetovanje',
+  'Uklanjanje kamenca i poliranje, oba zubna luka',
+  'Kompozitni ispun, jednopovršinski',
+  'Bezmetalna / cirkonij navlaka',
+]
+  .map((label) => priceGroups.flatMap((g) => g.rows).find((r) => rowLabel(r) === label)!)
   .filter(Boolean);
 
 const facts = [
@@ -241,7 +246,7 @@ export default function Home() {
           </Reveal>
           <Reveal className="fade" delay={0.15}>
             <p className="mt-6 max-w-[40ch] text-lg text-muted">
-              Okvirne cijene su javne, a tačnu cijenu svakog koraka dobijete na besplatnom prvom pregledu, prije nego
+              Naše cijene su javne, a plan liječenja i cijenu svakog koraka dobijete na besplatnom prvom pregledu, prije nego
               što bilo šta počne.
             </p>
             <Link href="/cijene" className="btn btn-ghost mt-8">
@@ -252,12 +257,12 @@ export default function Home() {
         <Reveal className="fade">
           <dl className="divide-y divide-line rounded-[1.75rem] border border-line bg-panel px-6 py-2 sm:px-8">
             {keyPrices.map((row) => (
-              <div key={row.name} className="flex items-baseline justify-between gap-6 py-5">
+              <div key={rowLabel(row)} className="flex items-baseline justify-between gap-6 py-5">
                 <dt>
                   {row.name}
                   {row.note && <span className="mt-0.5 block text-sm text-muted">{row.note}</span>}
                 </dt>
-                <dd className={`shrink-0 font-semibold tabular-nums ${row.price === 'Besplatno' ? 'text-gold' : ''}`}>
+                <dd className={`shrink-0 font-semibold tabular-nums ${row.price === FREE ? 'text-gold' : ''}`}>
                   {row.price}
                 </dd>
               </div>
