@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Image, { getImageProps } from 'next/image';
 import Link from 'next/link';
 import pregled from '@/assets/img/dr-karic-pregled.jpg';
-import ordinacija1i2 from '@/assets/img/ordinacija-1-i-2.jpg';
 import { CompareSlider } from '@/components/CompareSlider';
 import { Counter } from '@/components/Counter';
 import { Lines } from '@/components/Lines';
@@ -154,23 +153,14 @@ export default function Home() {
       </section>
 
       <section className="shell mt-[clamp(6rem,14vw,12rem)] grid items-center gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20" aria-labelledby="tim-title">
-        {/* Whole photos, at their own shape: Dr. Karić at work, then both surgeries. */}
-        <div className="grid gap-5 lg:max-w-[34rem] lg:justify-self-end">
-          <Image
-            src={pregled}
-            alt="Dr. Edina Karić pregleda pacijenticu u ordinaciji"
-            sizes="(min-width: 1024px) 45vw, 100vw"
-            placeholder="blur"
-            className="h-auto w-full rounded-[1.75rem] border border-line"
-          />
-          <Image
-            src={ordinacija1i2}
-            alt="Ordinacija 1 i ordinacija 2, odvojene staklenom pregradom"
-            sizes="(min-width: 1024px) 45vw, 100vw"
-            placeholder="blur"
-            className="h-auto w-full rounded-[1.75rem] border border-line"
-          />
-        </div>
+        {/* The whole photo at its own shape, centred against the text beside it. */}
+        <Image
+          src={pregled}
+          alt="Dr. Edina Karić pregleda pacijenticu u ordinaciji"
+          sizes="(min-width: 1024px) 45vw, 100vw"
+          placeholder="blur"
+          className="h-auto w-full rounded-[1.75rem] border border-line"
+        />
         <div>
           <Reveal>
             <h2 id="tim-title" className="type-display text-[clamp(2rem,5.6vw,6rem)]">

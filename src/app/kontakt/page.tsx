@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import ulaz from '@/assets/img/ulaz-kontakt.jpg';
+import ulaz from '@/assets/img/ulaz.jpg';
 import { OpenStatus } from '@/components/OpenStatus';
 import { PageHero } from '@/components/PageHero';
 import Image from 'next/image';

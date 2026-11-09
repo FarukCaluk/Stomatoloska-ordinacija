@@ -46,13 +46,12 @@ export function HorizontalGallery({
         className="flex h-full w-max items-center gap-5 px-[clamp(1rem,3.5vw,3rem)] py-16 max-lg:w-auto max-lg:snap-x max-lg:snap-mandatory max-lg:overflow-x-auto lg:gap-8 lg:py-0"
       >
         <div className="w-[min(82vw,30rem)] shrink-0 snap-start pr-6">{intro}</div>
-        {/* Every card has the photo's own shape (3:2, or 2:3 when upright) at one shared height, so nothing is cut off. */}
+        {/* All cards share one height; each is as wide as its photo's own shape needs, so nothing is cut off. */}
         {items.map((it) => (
           <figure
             key={it.caption}
-            className={`shrink-0 snap-start ${
-              it.src.height > it.src.width ? 'w-[56vw] sm:w-[27vw] lg:w-[19.5vw]' : 'w-[82vw] sm:w-[60vw] lg:w-[44vw]'
-            }`}
+            className="shrink-0 snap-start [--h:56vw] sm:[--h:40vw] lg:[--h:29vw]"
+            style={{ width: `calc(var(--h) * ${it.src.width / it.src.height})`, maxWidth: '90vw' }}
           >
             <div
               className="relative overflow-hidden rounded-[1.75rem] border border-line"

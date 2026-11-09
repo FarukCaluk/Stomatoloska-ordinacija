@@ -12,6 +12,9 @@ export const metadata: Metadata = {
     'Cjenovnik stomatološke ordinacije Dr. Karić u Kaknju: ispuni, liječenje kanala, vađenje zuba, proteze, navlake, izbjeljivanje i aligneri. Prvi pregled je besplatan.',
 };
 
+// The board in the clinic has restorative, preventive and endodontics on the left, the rest on the right.
+const LEFT_COLUMN = 3;
+
 export default function CijenePage() {
   return (
     <main id="sadrzaj">
@@ -20,36 +23,46 @@ export default function CijenePage() {
         lead="Cjenovnik naše ordinacije, sve cijene su u KM. Plan liječenja i cijenu svakog koraka dobijete nakon pregleda, prije nego što bilo šta počne."
       />
 
-      {/* Two columns that balance themselves by height; groups in the same order as the board in the clinic. */}
-      <section className="shell gap-8 lg:columns-2" aria-label="Cjenovnik">
-        {priceGroups.map((group, gi) => (
-          <Reveal key={group.id} className="fade mb-6 break-inside-avoid lg:mb-8" delay={gi % 2 ? 0.08 : 0}>
-            <section
-              id={group.id}
-              aria-labelledby={`${group.id}-title`}
-              className="rounded-[1.75rem] border border-line bg-panel p-6 sm:p-8 lg:p-10"
-            >
-              <div className="flex items-baseline gap-4">
-                <span className="font-semibold text-gold">{String(gi + 1).padStart(2, '0')}</span>
-                <h2 id={`${group.id}-title`} className="type-display text-[clamp(1.5rem,2.6vw,2.4rem)]">
-                  {group.title}
-                </h2>
-              </div>
-              <dl className="mt-6 divide-y divide-line">
-                {group.rows.map((row) => (
-                  <div key={row.name + (row.note ?? '')} className="flex items-baseline justify-between gap-6 py-3.5">
-                    <dt>
-                      {row.name}
-                      {row.note && <span className="mt-0.5 block text-sm text-muted">{row.note}</span>}
-                    </dt>
-                    <dd className={`shrink-0 text-right font-semibold tabular-nums ${row.price === FREE ? 'text-gold' : ''}`}>
-                      {row.price}
-                    </dd>
+      {/* The board's two columns, side by side. The last card of each column stretches, so both end on one line. */}
+      <section className="shell grid gap-6 lg:grid-cols-2 lg:gap-8" aria-label="Cjenovnik">
+        {[priceGroups.slice(0, LEFT_COLUMN), priceGroups.slice(LEFT_COLUMN)].map((column, ci) => (
+          <div key={ci} className="flex min-w-0 flex-col gap-6 lg:gap-8">
+            {column.map((group, i) => (
+              <Reveal
+                key={group.id}
+                className={`fade ${i === column.length - 1 ? 'flex flex-1 flex-col' : ''}`}
+                delay={ci ? 0.08 : 0}
+              >
+                <section
+                  id={group.id}
+                  aria-labelledby={`${group.id}-title`}
+                  className="flex-1 rounded-[1.75rem] border border-line bg-panel p-6 sm:p-8 lg:p-10"
+                >
+                  <div className="flex items-baseline gap-4">
+                    <span className="font-semibold text-gold">
+                      {String(ci * LEFT_COLUMN + i + 1).padStart(2, '0')}
+                    </span>
+                    <h2 id={`${group.id}-title`} className="type-display text-[clamp(1.5rem,2.6vw,2.4rem)]">
+                      {group.title}
+                    </h2>
                   </div>
-                ))}
-              </dl>
-            </section>
-          </Reveal>
+                  <dl className="mt-6 divide-y divide-line">
+                    {group.rows.map((row) => (
+                      <div key={row.name + (row.note ?? '')} className="flex items-baseline justify-between gap-6 py-3.5">
+                        <dt>
+                          {row.name}
+                          {row.note && <span className="mt-0.5 block text-sm text-muted">{row.note}</span>}
+                        </dt>
+                        <dd className={`shrink-0 text-right font-semibold tabular-nums ${row.price === FREE ? 'text-gold' : ''}`}>
+                          {row.price}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+              </Reveal>
+            ))}
+          </div>
         ))}
       </section>
 
